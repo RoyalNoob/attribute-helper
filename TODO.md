@@ -29,22 +29,19 @@ Milestones follow [docs/attrib_lifetime_plan.md](docs/attrib_lifetime_plan.md) �
 
 ## Spikes (S1–S4 block phase 1; results go in `docs/spikes/`)
 
-- [ ] S1 data ID readable from Python for all four classes
-      — partial: `hou.Attrib.dataId()` returns `hou.AttribDataId`, not int; pick a JSON-safe form
-- [ ] S2 false "Written" table: Wrangle, Attribute Create, Merge, Blast, Transform,
-      Copy to Points, Pack, Clean, For-Each, Compile
-      — partial: Box/Wrangle/Transform/Blast checked; topology change rewrites all IDs
+- [x] S1 data ID readable from Python for all four classes → [data_ids.md](docs/spikes/data_ids.md)
+- [x] S2 false "Written" table → [data_ids.md](docs/spikes/data_ids.md)
 - [ ] S3 overlay shapes: outline on a node, line on a wire, follow node moves
 - [ ] S4 test panel with one table opens from the pane menu
       — partial: PySide6 6.8.3 confirmed; `.pypanel` loading from a package not yet tested
 - [ ] S5 package JSON loads the panel from a clean user pref folder
 - [ ] S6 cook / network-change callbacks and cost; pick redraw method
-- [ ] S7 group data IDs in HOM (decides group support in phase 5)
+- [x] S7 group data IDs in HOM → yes, same type ([data_ids.md](docs/spikes/data_ids.md))
 
 ## Phase 1: Core (pure Python)
 
-- [ ] Data model: `AttribKey`, `AttribInfo`, `Snapshot`, `Graph`, `State`
-- [ ] `compute_states` per plan §4.1 (+ "topology changed" case from API notes)
+- [ ] Data model: `AttribKey`, `AttribInfo`, `Snapshot` (+ topology ID), `Graph`, `State`; data ID = 4-int tuple
+- [ ] `compute_states` per plan §4.1 + `REBUILT` state when topology ID changed (S2)
 - [ ] `lifetime`, `summary`
 - [ ] Fixtures: linear chain, branch + merge, generator, deleted attrib, same name in two classes
 - [ ] Every state rule unit-tested; `core/` coverage ≥ 90%
@@ -92,3 +89,4 @@ Milestones follow [docs/attrib_lifetime_plan.md](docs/attrib_lifetime_plan.md) �
 ## Log
 
 - 2026-09-26: Phase 0 skeleton, MIT license, TODO.md. API notes already cover part of S1/S2/S4.
+- 2026-09-26: S1, S2, S7 done (hython). Topology change invalidates data IDs → new `REBUILT` state.
