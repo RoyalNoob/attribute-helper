@@ -17,9 +17,23 @@ fresh `EditorUpdates` and ends with `applyToEditor()`, which calls `setShapes()`
 `setOverlayShapes()` with only what the current handler and `pending_actions` supplied.
 Shapes set from outside are overwritten on the next event.
 
-## Round 2: persistent pending action — pending GUI check
+## Round 2: persistent pending action — PASS
 
 The same loop merges `editor_updates` from every object in `pending_actions` on each event, and
 `nodegraphhooks.createEventHandler(uievent, pending_actions)` receives that list. Wrapping that
 hook function (not shadowing the `nodegraphhooks.py` file, so other tools' hooks still run) lets us
 insert one `PendingAction` that never completes and recomputes shapes from `itemRect()` each event.
+
+| Check | Result |
+|---|---|
+| Stays when the mouse enters the editor | yes |
+| Follows node drags | yes |
+| Pan / zoom | yes |
+| Survives dive in/out (hotkey) | yes |
+
+Gotcha: restoring the hook is not enough to stop. The action stays in `pending_actions` until the
+editor's event coroutine resets, so the wire came back after `s3_stop()`. Fix: `completeAction()`
+returns `True` once stopped, which makes nodegraph drop the action.
+
+Method for phase 3: overlay = one `PendingAction` per editor, injected by wrapping
+`nodegraphhooks.createEventHandler`. No node callbacks needed for drags.

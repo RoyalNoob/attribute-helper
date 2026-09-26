@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Merged by Houdini into New Pane Tab Type (the repo is on HOUDINI_PATH via the package). -->
+<menuDocument>
+    <menu>
+        <actionItem id="pythonpanel::attribute_helper">
+            <label>Attribute Helper</label>
+        </actionItem>
+    </menu>
+</menuDocument>

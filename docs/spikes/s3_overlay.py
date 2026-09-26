@@ -47,6 +47,8 @@ class OverlayAction(nodegraphbase.PendingAction):
         self.node = node
 
     def completeAction(self, uievent):
+        if not _S3:
+            return True  # stopped: completing removes us from pending_actions
         self.editor_updates.setOverlayShapes(_shapes(uievent.editor, self.node))
         return False
 

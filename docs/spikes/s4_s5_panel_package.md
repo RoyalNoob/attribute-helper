@@ -22,4 +22,8 @@ otherwise Houdini ignores the variable): `import attribute_helper` works, the re
 - Qt binding: PySide6 (see houdini-api-notes.md).
 - `python_panels/*.pypanel` under a `HOUDINI_PATH` entry is found automatically, and the panel
   script can `import attribute_helper` from the package.
-- **Not yet checked in the GUI:** the panel opens from the pane-tab menu and shows the table.
+- `includeInPaneTabMenu` in the `.pypanel` does **not** add it to New Pane Tab Type; it only puts it
+  in the Python Panel drop-down. The pane-tab menu needs an `actionItem id="pythonpanel::<name>"`
+  in a `PaneTabTypeMenu.xml` on `HOUDINI_PATH` (see the header of `$HFS/houdini/PaneTabTypeMenu.xml`).
+  Added at the repo root.
+- **Not yet checked in the GUI:** the menu entry appears and the table shows.
