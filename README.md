@@ -13,11 +13,12 @@ Status: pre-alpha. All six phases of [docs/plan.md](docs/plan.md) are done. Houd
 ## Install
 
 1. Get this repository onto your machine (clone or download), anywhere you like.
-2. In Houdini, open **Windows** > **Python Shell** and run this line, with your path to
-   `install.py`:
+2. In Houdini, open **Windows** > **Python Shell** and run this line. Replace
+   `<path-to-attribute-helper>` with the folder you put the repository in, using forward
+   slashes (for example `D:/tools/attribute-helper`):
 
    ```python
-   import runpy; runpy.run_path(r"E:/Repo/attribute-helper/install.py")
+   import runpy; runpy.run_path(r"<path-to-attribute-helper>/install.py")
    ```
 
    It prints where it installed. It only writes one small file,
@@ -33,10 +34,10 @@ If you move the repository, run the install line again from the new place.
 
 Create `attribute_helper.json` in the `packages` folder of your Houdini preferences
 (`$HOUDINI_USER_PREF_DIR`: on Windows usually `Documents/houdini22.0`, on Linux `~/houdini22.0`,
-on macOS `~/Library/Preferences/houdini/22.0`), with your path and forward slashes:
+on macOS `~/Library/Preferences/houdini/22.0`). Replace `<path-to-attribute-helper>` as above:
 
 ```json
-{"package_path": "E:/Repo/attribute-helper/package"}
+{"package_path": "<path-to-attribute-helper>/package"}
 ```
 
 On Windows, Houdini started from the Start menu reads `Documents/houdini22.0`, but a shell with

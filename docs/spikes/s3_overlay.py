@@ -2,7 +2,7 @@
 
 In Houdini, select one SOP that has an input, then in Windows > Python Shell:
 
-    exec(open(r"E:/Repo/attribute-helper/docs/spikes/s3_overlay.py").read())
+    exec(open(r"<path-to-attribute-helper>/docs/spikes/s3_overlay.py").read())
 
 Draws an orange outline on the node and an orange wire to its first input.
 Clear with:  s3_stop()

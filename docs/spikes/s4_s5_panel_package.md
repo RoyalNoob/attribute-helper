@@ -11,7 +11,7 @@ to `HOUDINI_PATH`. No hard-coded path in the repo.
 Because the path is relative to the JSON file, do not copy it into prefs. Install with a
 one-line redirect in `$HOUDINI_USER_PREF_DIR/packages/attribute_helper.json`:
 
-    {"package_path": "E:/Repo/attribute-helper/package"}
+    {"package_path": "<path-to-attribute-helper>/package"}
 
 Checked with `HOUDINI_USER_PREF_DIR=<empty dir>/houdini__HVER__` (the `__HVER__` token is required,
 otherwise Houdini ignores the variable): `import attribute_helper` works, the repo is on

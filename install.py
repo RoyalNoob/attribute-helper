@@ -1,8 +1,9 @@
 """Install attribute-helper for the current Houdini user.
 
-In Houdini, open Windows > Python Shell and run (with your path to this file):
+In Houdini, open Windows > Python Shell and run (replace <path-to-attribute-helper> with the
+folder this file is in, using forward slashes):
 
-    import runpy; runpy.run_path(r"E:/Repo/attribute-helper/install.py")
+    import runpy; runpy.run_path(r"<path-to-attribute-helper>/install.py")
 
 It writes <your Houdini prefs>/packages/attribute_helper.json pointing at this folder. Running it
 inside Houdini uses the prefs folder that Houdini actually reads. Restart Houdini afterwards.
