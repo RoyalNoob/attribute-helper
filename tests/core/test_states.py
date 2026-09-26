@@ -131,3 +131,14 @@ def test_wires_carry_key_into_delete_but_not_past_it_or_into_unknown():
     assert wires(graph, st, PT_M) == [("wr", "m"), ("m", "del")]  # not box -> m: no mask on box
     del st["tail"]  # unknown node: no wire into it
     assert ("del", "tail") not in wires(graph, st, PT_P)
+
+
+def test_summary_skips_containers_so_inner_births_count_once():
+    # sub contains inner; both are BORN for mask (sub = overall effect). Born lists inner only.
+    snaps = [snap("box", point_P=1), snap("inner", point_P=1, point_mask=2),
+             snap("sub", point_P=1, point_mask=2)]
+    graph = Graph([s.node_id for s in snaps], {"inner": ["box"], "sub": ["box"]}, frozenset({"sub"}))
+    st = compute_states(graph, {s.node_id: s for s in snaps})
+    assert st["sub"][PT_M] == B
+    rows = {r.key: r for r in summary(graph, st, {s.node_id: s for s in snaps})}
+    assert rows[PT_M].born == ["inner"]

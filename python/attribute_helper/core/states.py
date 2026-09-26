@@ -61,6 +61,8 @@ def summary(graph: Graph, states: States, snapshots: dict[str, Snapshot]) -> lis
     """One row per key for the UI table, sorted by key. Node lists follow graph order."""
     by_key: dict[AttribKey, dict[State, list[str]]] = {}
     for node in graph.nodes:
+        if node in graph.containers:
+            continue
         for key, state in states.get(node, {}).items():
             by_key.setdefault(key, {}).setdefault(state, []).append(node)
     rows = []

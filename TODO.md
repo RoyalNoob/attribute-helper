@@ -13,7 +13,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Phase 4 (leak report)
+**Current milestone:** Phase 5 (depth)
 
 ## Decisions
 
@@ -68,13 +68,13 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 ## Phase 4: Leak report
 
 - [x] `leak_report` in core: the state rules across the subnet as one node (+ Unknown for topology changes)
-- [ ] Leak report tab — built; GUI checks 12–15 in docs/ui_checklist.md pending
+- [x] Leak report tab (GUI checks 12–15 pass)
 - [x] Acceptance: test subnet with exactly one of each gives exactly three results (hython test)
 
 ## Phase 5: Depth
 
-- [ ] Enter subnets and HDAs (tree of network levels)
-- [ ] Groups (if S7 passes) and detail attributes in the table
+- [ ] Enter subnets and unlocked HDAs (locked HDAs stay one node) — built, GUI checks 16–19 pending
+- [x] Groups (`group:point|prim|vertex|edge`) and detail attributes in the table
 
 ## Phase 6: Policy link
 
@@ -102,3 +102,5 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Phase 3 built (panel, table, overlay, poll). Waiting on docs/ui_checklist.md in the GUI.
 - 2026-09-26: Phase 3 done: GUI checklist passes (close bug fixed: hook is onDestroyInterface).
 - 2026-09-26: Phase 4 built: leak report (core, adapter, tab). Acceptance test passes in hython.
+- 2026-09-26: Phase 4 done: GUI checks 12–15 pass.
+- 2026-09-26: Phase 5 built: walk enters editable subnets; groups tracked. hython tests pass.

@@ -14,7 +14,7 @@ from .leak_tab import LeakTab
 from .table_model import AttribFilter, AttribTableModel
 
 POLL_MS = 250  # S6: an unchanged poll costs about 2 ms per 1000 nodes
-CLASSES = ["", "point", "prim", "vertex", "detail"]
+CLASSES = ["", "point", "prim", "vertex", "detail", "group:point", "group:prim", "group:vertex", "group:edge"]
 
 
 @dataclass
@@ -133,8 +133,10 @@ class Panel(QtWidgets.QWidget):
             return
         self.target.setText(f"Target: {target.path()}  ({len(graph.nodes)} nodes)")
         self._show(view, _problem_text(problems))
-        self.model.set_rows(summary(graph, states, snaps),
-                            {n: n.rsplit("/", 1)[-1] for n in graph.nodes})
+        level = target.parent().path() + "/"
+        # Inside a subnet shows as "subnet1/wrangle1"; boundary nodes by their own name.
+        names = {n: n[len(level):] if n.startswith(level) else n.rsplit("/", 1)[-1] for n in graph.nodes}
+        self.model.set_rows(summary(graph, states, snaps), names)
 
     def _show(self, view: View | None, status: str) -> None:
         if view is None and self.view is None and self.status.text() == status:
@@ -181,6 +183,9 @@ class Panel(QtWidgets.QWidget):
         if node is None:
             return
         with hou.undos.disabler():  # the tool must leave no undo entries
+            editor = _editor()
+            if editor is not None and editor.pwd() != node.parent():
+                editor.setPwd(node.parent())  # born inside a subnet: go there
             node.setSelected(True, clear_all_selected=True)
 
     def shutdown(self) -> None:

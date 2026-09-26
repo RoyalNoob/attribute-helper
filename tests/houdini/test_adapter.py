@@ -149,3 +149,34 @@ def test_leak_report_plan_acceptance():
     assert report.written == [AttribKey("point", "a")]
     assert report.deleted == [AttribKey("point", "b")]
     assert report.rebuilt == []
+
+
+def test_walk_enters_editable_subnet_but_not_locked_hda():
+    from attribute_helper.core.states import summary
+
+    g = geo()
+    box = sop(g, "box")
+    sub = sop(g, "subnet", box)
+    inner = sop(sub, "attribwrangle", sub.indirectInputs()[0], snippet="f@tmp = 1;")
+    inner.setDisplayFlag(True)
+    tail = sop(g, "attribwrangle", sub, snippet="f@w = 1;")  # a locked HDA
+    graph, _ = walk(tail)
+    assert graph.nodes == [box.path(), inner.path(), sub.path(), tail.path()]
+    assert graph.containers == {sub.path()}
+    assert graph.inputs_of(inner.path()) == [box.path()]
+    graph, snaps, problems = collect(tail, SnapshotCache(), cook=True)
+    st = compute_states(graph, snaps)
+    tmp = AttribKey("point", "tmp")
+    assert st[inner.path()][tmp] == B and st[sub.path()][tmp] == B
+    rows = {r.key: r for r in summary(graph, st, snaps)}
+    assert rows[tmp].born == [inner.path()]
+
+
+def test_groups_have_states():
+    g = geo()
+    grp = sop(g, "groupcreate", sop(g, "box"), groupname="top")
+    delete = sop(g, "groupdelete", grp, group1="top")
+    st, _ = states(delete)
+    key = AttribKey("group:prim", "top")
+    assert st[grp.path()][key] == B
+    assert st[delete.path()][key] == D

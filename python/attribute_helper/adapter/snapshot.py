@@ -20,11 +20,24 @@ def _type(attrib: hou.Attrib) -> str:
     return attrib.dataType().name().lower() + ("[]" if attrib.isArrayType() else "")
 
 
+_GROUPS = (
+    ("group:point", hou.Geometry.pointGroups),
+    ("group:prim", hou.Geometry.primGroups),
+    ("group:vertex", hou.Geometry.vertexGroups),
+    ("group:edge", hou.Geometry.edgeGroups),
+)
+
+
 def read(node_id: str, geo: hou.Geometry) -> Snapshot:
     attribs = {
         AttribKey(cls, a.name()): AttribInfo(_type(a), a.size(), a.dataId().vexAttribDataId())
         for cls, get in _CLASSES for a in get(geo)
     }
+    # Groups follow the same rules (spike S7: they have data IDs too).
+    attribs.update({
+        AttribKey(cls, g.name()): AttribInfo("group", 1, g.dataId().vexAttribDataId())
+        for cls, get in _GROUPS for g in get(geo)
+    })
     return Snapshot(node_id, attribs, geo.topologyDataId().vexAttribDataId())
 
 

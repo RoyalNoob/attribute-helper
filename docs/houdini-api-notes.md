@@ -46,6 +46,11 @@ introspection and one small test network. They are not a full run of the spikes.
     `onDeactivateInterface`, `onNodePathChanged` (from `$HFS/houdini/python_panels`). A function named
     `onDestroy` is silently never called.
 
+11. `node.subnetOutputs()` returns the node feeding each subnet output (the Output SOP if present,
+    else the display node). A subnet's output data IDs equal that node's.
+12. `isLockedHDA()` is True for Attribute Wrangle and Solver: many SideFX SOPs are locked HDAs with
+    SOP children. `isNetwork()` alone does not separate subnets from these.
+
 ## Not yet verified
 
 - S2 across the full node list (Merge, Copy to Points, Pack, Clean, For-Each, Compile).

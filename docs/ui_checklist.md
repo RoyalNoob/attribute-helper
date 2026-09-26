@@ -47,3 +47,17 @@ with the display flag on the Attribute Delete.
 14. **Topology:** add a Blast inside (delete point 0) before the output. `a` moves from Outer writes
     to Unknown.
 15. **Deleted scope:** delete the Subnet. The tab says the node was deleted.
+
+## Depth: subnets and groups
+
+Setup: Box → Subnet → Null (display flag on the Null). Inside the subnet: input 1 → Attribute
+Wrangle (`f@tmp = 1;`) → Group Create (group name `top`), display flag on the Group Create.
+
+16. **Born inside:** on the Lifetime tab, `tmp` shows Born = `subnet1/attribwrangle1`, and the
+    point group `top` appears (class `group:prim`). Each is listed once, not also at the subnet.
+17. **Overlay at the outer level:** tick `tmp`. The Subnet gets the filled "born" outline, and the
+    Null a pass-through outline.
+18. **Row click dives in:** click the `tmp` row. The editor enters the subnet and selects the
+    wrangle. (With "Follow display node" on, the table now shows the inside of the subnet.)
+19. **Locked HDAs stay closed:** an Attribute Wrangle outside the subnet is one row source, not
+    expanded (its internals never appear in Born).

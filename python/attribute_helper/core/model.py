@@ -31,6 +31,9 @@ class Snapshot:
 class Graph:
     nodes: list[str]
     inputs: dict[str, list[str]] = field(default_factory=dict)  # node_id -> input node_ids
+    # Subnets whose inside is also in the graph. Their own state is their overall effect
+    # (compared with their outer inputs), so summaries skip them to avoid counting twice.
+    containers: frozenset[str] = frozenset()
 
     def inputs_of(self, node_id: str) -> list[str]:
         return self.inputs.get(node_id, [])
