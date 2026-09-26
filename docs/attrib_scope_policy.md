@@ -122,7 +122,9 @@ These fix what the attribute-helper viewer does. They do not decide enforcement.
    `<scope> <kind> <class> <name>`. Scope is `.` for the subnet/HDA that holds the parameter, or a
    network box name: a box has no parameters, so its list lives on the network that contains it.
    Renaming a box loses its ticks.
-4. Ticks that no longer match a finding are shown separately, so they can be removed.
+4. A tick records an intent: **leaked**, **changed**, or **deleted**. Written and unknown findings
+   are both "changed", so a topology change downstream (a Merge) does not orphan a tick.
+5. Ticks that no longer match a finding are shown separately, so they can be removed.
 
 ## 8. Open questions
 

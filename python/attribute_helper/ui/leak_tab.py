@@ -7,7 +7,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from ..adapter.scope import ExitResult, collect_scope, set_intended
 from ..adapter.snapshot import SnapshotCache
-from ..core.policy import Finding, findings
+from ..core.policy import Finding, finding, findings
 
 Qt = QtCore.Qt
 TITLES = {
@@ -113,10 +113,9 @@ class LeakTab(QtWidgets.QWidget):
                 self.tree.addTopLevelItem(parent)
             if exit.report is None:
                 continue
-            here = findings(exit.report)
-            found.update(here)
-            for kind, title in TITLES.items():
-                rows = [f for f in here if f.kind == kind]
+            found.update(findings(exit.report))
+            for field, title in TITLES.items():
+                rows = [finding(field, k) for k in getattr(exit.report, field)]
                 section = QtWidgets.QTreeWidgetItem([f"{title}: {len(rows)}"])
                 parent.addChild(section)
                 section.addChildren([self._item(f, f in marked) for f in rows])

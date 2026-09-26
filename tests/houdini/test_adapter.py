@@ -197,7 +197,7 @@ def test_network_box_scope_two_exits_and_ticks_on_parent():
     assert by_exit[right.path()].written == [AttribKey("point", "a")]
     assert by_exit[right.path()].deleted == []  # c is only on the side input: read, not deleted
 
-    written = Finding("written", AttribKey("point", "a"))
+    written = Finding("changed", AttribKey("point", "a"))
     set_intended(box, written, True)
     assert g.parm(PARM) is not None and box.name() in g.parm(PARM).evalAsString()
     assert intended(box) == {written}
