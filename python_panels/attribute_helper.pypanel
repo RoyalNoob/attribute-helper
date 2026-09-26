@@ -2,25 +2,24 @@
 <pythonPanelDocument>
   <interface name="attribute_helper" label="Attribute Helper" icon="MISC_python" showNetworkNavigationBar="false" help_url="">
     <script><![CDATA[
-# Spike S4: a table that proves the panel loads and can import from the package.
-from PySide6 import QtWidgets, QtGui
-import attribute_helper
+from attribute_helper.ui.panel import Panel
+
+panel = None
 
 
 def onCreateInterface():
-    model = QtGui.QStandardItemModel(2, 2)
-    model.setHorizontalHeaderLabels(["check", "value"])
-    for row, (k, v) in enumerate([("attribute_helper imported from", attribute_helper.__file__),
-                                  ("PySide", QtWidgets.__name__)]):
-        model.setItem(row, 0, QtGui.QStandardItem(k))
-        model.setItem(row, 1, QtGui.QStandardItem(v))
-    view = QtWidgets.QTableView()
-    view.setModel(model)
-    view.horizontalHeader().setStretchLastSection(True)
-    return view
+    global panel
+    panel = Panel()
+    return panel
+
+
+def onDestroy():
+    if panel is not None:
+        panel.shutdown()
 ]]></script>
     <includeInPaneTabMenu menu_position="0" create_separator="false"/>
     <includeInToolbarMenu menu_position="0" create_separator="false"/>
-    <help><![CDATA[]]></help>
+    <help><![CDATA[Shows where each SOP attribute is born, written, passed through, and deleted.
+Tick an attribute to draw its lifetime on the network editor.]]></help>
   </interface>
 </pythonPanelDocument>

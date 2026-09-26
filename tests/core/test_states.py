@@ -1,5 +1,5 @@
 from attribute_helper.core.model import AttribInfo, AttribKey, Graph, Snapshot, State
-from attribute_helper.core.states import compute_states, lifetime, summary
+from attribute_helper.core.states import compute_states, lifetime, summary, wires
 
 B, W, P, R, D = State.BORN, State.WRITTEN, State.PASS, State.REBUILT, State.DELETED
 PT_P, PT_M, PR_M, DT_D = (AttribKey("point", "P"), AttribKey("point", "mask"),
@@ -119,3 +119,15 @@ def test_summary_rows():
     assert (rows[PT_P].born, rows[PT_P].deleted, rows[PT_P].writes, rows[PT_P].rebuilt) == (["box"], [], 1, 1)
     assert (rows[PT_M].born, rows[PT_M].deleted, rows[PT_M].writes, rows[PT_M].rebuilt) == (["wr"], ["del"], 0, 1)
     assert rows[PT_M].type == "float"
+
+
+def test_wires_carry_key_into_delete_but_not_past_it_or_into_unknown():
+    graph, _, st = run({"wr": ["box"], "m": ["wr", "box"], "del": ["m"], "tail": ["del"]},
+                       snap("box", point_P=1),
+                       snap("wr", point_P=1, point_mask=2),
+                       snap("m", point_P=1, point_mask=2),
+                       snap("del", point_P=1),
+                       snap("tail", point_P=1))
+    assert wires(graph, st, PT_M) == [("wr", "m"), ("m", "del")]  # not box -> m: no mask on box
+    del st["tail"]  # unknown node: no wire into it
+    assert ("del", "tail") not in wires(graph, st, PT_P)

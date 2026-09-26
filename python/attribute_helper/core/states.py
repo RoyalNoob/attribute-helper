@@ -40,6 +40,12 @@ def lifetime(states: States, key: AttribKey) -> set[str]:
     return {node for node, keys in states.items() if keys.get(key) in ALIVE}
 
 
+def wires(graph: Graph, states: States, key: AttribKey) -> list[tuple[str, str]]:
+    """(input, node) wires that carry `key`: alive at the input, and the node has a state for it."""
+    return [(src, node) for node in graph.nodes if key in states.get(node, {})
+            for src in graph.inputs_of(node) if states.get(src, {}).get(key) in ALIVE]
+
+
 @dataclass(frozen=True)
 class AttribSummary:
     key: AttribKey

@@ -1,0 +1,35 @@
+# UI checklist
+
+Manual checks in the Houdini GUI. Run after any change to `ui/` or `overlay.py`.
+Restart Houdini first (the panel module is imported once per session).
+
+## Setup
+
+In a Geometry node, build: Box → Attribute Wrangle (`f@mask = @P.y > 0;`) → Transform →
+Attribute Delete (delete point `mask`) → Null, with the display flag on the Null.
+Open New Pane Tab Type > Inspectors > Attribute Helper next to the network editor.
+
+## Checks
+
+1. **Table:** with "Hide standard" on, the table lists `mask` (point, born at the wrangle,
+   deleted at the Attribute Delete). Turn "Hide standard" off: `P` appears, born at the box,
+   Written = 1 (the Transform).
+2. **Filters:** type `mas` → only `mask`. Pick "prim" in the class list → empty. Reset.
+3. **Toggle:** tick `mask`. Orange outlines appear: filled on the wrangle (born), faint on the
+   Transform (pass-through), a cross on the Attribute Delete (deleted). Orange wires run
+   wrangle → Transform → Attribute Delete, none after it. Untick: all gone.
+4. **Two keys:** turn "Hide standard" off, tick `mask` and `P`. Two colors, nested outlines,
+   side-by-side wires.
+5. **Follows moves:** drag nodes; outlines and wires follow. Pan and zoom.
+6. **Live update:** change the wrangle to `f@mask2 = 1;`. Within a second the table shows
+   `mask2` instead of `mask`, without clicking Refresh.
+7. **Cook mode:** add a new Transform after the Null without displaying it, select it, click
+   "Use selected". The status line says nodes need a cook, and the new node is not in the
+   overlay. Tick "Cook on demand": it is included.
+8. **Levels:** dive out of the Geometry node: overlay gone, the table clears (no SOP target).
+   Dive back in: both return.
+9. **Row click:** click a row's name: its born node gets selected.
+10. **No scene changes:** after all of the above, Edit > Undo History shows only your own edits,
+    none from the panel.
+11. **Close:** close the panel tab. Overlay gone; moving the mouse over the editor does not bring
+    it back.

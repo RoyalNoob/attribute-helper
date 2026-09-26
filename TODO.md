@@ -57,12 +57,13 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## Phase 3: MVP panel
 
-- [ ] Header: target field, use display node, pick, cook-mode toggle, refresh
-- [ ] Table (`QAbstractTableModel` + `QSortFilterProxyModel`) with filters
-- [ ] Overlay for toggled keys on one network level
-- [ ] Redraw: QTimer poll of pwd + cache keys (S6); overlay via pending action (S3)
+- [ ] Header: follow display node, use selected, cook on demand, refresh — built, GUI check pending
+- [ ] Table (`QAbstractTableModel` + `QSortFilterProxyModel`) with filters — built, model/filter tested in hython
+- [ ] Overlay for toggled keys on one network level — built, GUI check pending
+- [ ] Redraw: QTimer poll of pwd + cache keys (S6); overlay via pending action (S3) — built
 - [ ] Acceptance: overlay follows moved nodes; no undo entries or param changes after use
-- [ ] `docs/ui_checklist.md`
+- [x] `docs/ui_checklist.md`
+- [ ] Run the checklist in the GUI
 
 ## Phase 4: Leak report
 
@@ -98,3 +99,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Phase 1 done: model + states, 14 tests, 100% core coverage. CI on Python 3.13.
 - 2026-09-26: Dropped CI (decision); tests run locally.
 - 2026-09-26: Phase 2 done: adapter (walk, snapshot, cache, cook policy), 9 hython tests.
+- 2026-09-26: Phase 3 built (panel, table, overlay, poll). Waiting on docs/ui_checklist.md in the GUI.
