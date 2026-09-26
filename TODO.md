@@ -32,7 +32,8 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - [x] S1 data ID readable from Python for all four classes → [data_ids.md](docs/spikes/data_ids.md)
 - [x] S2 false "Written" table → [data_ids.md](docs/spikes/data_ids.md)
 - [ ] S3 overlay shapes: outline on a node, line on a wire, follow node moves
-      — script ready: [s3_overlay.py](docs/spikes/s3_overlay.py); GUI check pending
+      — round 1 failed (editor wipes shapes each event); round 2 via pending action awaits GUI check
+        ([s3_overlay.md](docs/spikes/s3_overlay.md))
 - [ ] S4 test panel with one table opens from the pane menu
       — partial: found + imports OK in hython; GUI check pending ([s4_s5](docs/spikes/s4_s5_panel_package.md))
 - [x] S5 package JSON loads the panel from a clean user pref folder → [s4_s5](docs/spikes/s4_s5_panel_package.md)
@@ -92,3 +93,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Phase 0 skeleton, MIT license, TODO.md. API notes already cover part of S1/S2/S4.
 - 2026-09-26: S1, S2, S7 done (hython). Topology change invalidates data IDs → new `REBUILT` state.
 - 2026-09-26: S5 done. S3 script and S4 panel written; both wait for a GUI check.
+- 2026-09-26: S3 round 1 failed; cause found in nodegraph.py; round 2 script written.
