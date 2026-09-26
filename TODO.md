@@ -12,7 +12,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Phase 1 (core)
+**Current milestone:** Phase 2 (adapter)
 
 ## Decisions
 
@@ -39,11 +39,12 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## Phase 1: Core (pure Python)
 
-- [ ] Data model: `AttribKey`, `AttribInfo`, `Snapshot` (+ topology ID), `Graph`, `State`; data ID = 4-int tuple
-- [ ] `compute_states` per plan §4.1 + `REBUILT` state when topology ID changed (S2)
-- [ ] `lifetime`, `summary`
-- [ ] Fixtures: linear chain, branch + merge, generator, deleted attrib, same name in two classes
-- [ ] Every state rule unit-tested; `core/` coverage ≥ 90%
+- [x] Data model: `AttribKey`, `AttribInfo`, `Snapshot` (+ topology ID), `Graph`, `State`; data ID = 4-int tuple
+- [x] `compute_states` per plan §4.1 + `REBUILT` state when topology ID changed (S2)
+- [x] `lifetime`, `summary`
+- [x] Fixtures: linear chain, branch + merge, generator, deleted attrib, same name in two classes
+      (built in code by `snap()` in tests/core/test_states.py, not JSON files)
+- [x] Every state rule unit-tested; `core/` coverage 100%, CI fails under 90%
 
 ## Phase 2: Adapter
 
@@ -94,3 +95,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: S3 passes with pending-action method. S4 needed PaneTabTypeMenu.xml.
 - 2026-09-26: S4 done (menu XML in a subMenu; GUI reads Documents/houdini22.0 prefs).
 - 2026-09-26: S6 done. All spikes done; phase 1 unblocked.
+- 2026-09-26: Phase 1 done: model + states, 14 tests, 100% core coverage. CI on Python 3.13.
