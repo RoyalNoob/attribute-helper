@@ -13,7 +13,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Phase 5 (depth)
+**Current milestone:** Phase 6 (policy link) — design discussion
 
 ## Decisions
 
@@ -73,7 +73,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## Phase 5: Depth
 
-- [ ] Enter subnets and unlocked HDAs (locked HDAs stay one node) — built, GUI checks 16–19 pending
+- [x] Enter subnets and unlocked HDAs (locked HDAs stay one node); GUI checks 16–19 pass
 - [x] Groups (`group:point|prim|vertex|edge`) and detail attributes in the table
 
 ## Phase 6: Policy link
@@ -104,3 +104,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Phase 4 built: leak report (core, adapter, tab). Acceptance test passes in hython.
 - 2026-09-26: Phase 4 done: GUI checks 12–15 pass.
 - 2026-09-26: Phase 5 built: walk enters editable subnets; groups tracked. hython tests pass.
+- 2026-09-26: Phase 5 done: GUI checks 16–19 pass.
