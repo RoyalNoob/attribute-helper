@@ -148,31 +148,34 @@ def test_leak_report_plan_acceptance():
     from attribute_helper.adapter.scope import collect_scope
 
     _, _, sub = plan_subnet()
-    decl, results, problems = collect_scope(sub, SnapshotCache(), cook=True)
-    assert not problems and decl is None
-    [result] = results
+    marked, [result], problems = collect_scope(sub, SnapshotCache(), cook=True)
+    assert not problems and marked == set()
     assert result.report.leaked == [AttribKey("point", "tmp")]
     assert result.report.written == [AttribKey("point", "a")]
     assert result.report.deleted == [AttribKey("point", "b")]
-    assert result.report.rebuilt == [] and result.violations is None
+    assert result.report.rebuilt == []
 
 
-def test_subnet_declaration_from_spare_parms():
-    from attribute_helper.adapter.scope import collect_scope
+def test_intended_ticks_create_one_hidden_parm_and_round_trip():
+    from attribute_helper.adapter.scope import PARM, intended, set_intended
+    from attribute_helper.core.policy import Finding
 
     _, _, sub = plan_subnet()
-    for name in ("scope_inout", "scope_out"):
-        sub.addSpareParmTuple(hou.StringParmTemplate(name, name, 1))
-    sub.parm("scope_inout").set("a")
-    sub.parm("scope_out").set("tmp -> fx_tmp, height")
-    decl, [result], _ = collect_scope(sub, SnapshotCache(), cook=True)
-    assert decl.in_ == ["*"]
-    kinds = sorted((v.kind, v.name) for v in result.violations)
-    assert kinds == [("missing output", "height"), ("undeclared delete", "b")]
+    tmp = Finding("leaked", AttribKey("point", "tmp"))
+    assert sub.parm(PARM) is None
+    set_intended(sub, tmp, True)
+    assert sub.parm(PARM).parmTemplate().isHidden()
+    assert intended(sub) == {tmp}
+    set_intended(sub, Finding("deleted", AttribKey("point", "b")), True)
+    set_intended(sub, tmp, False)
+    assert intended(sub) == {Finding("deleted", AttribKey("point", "b"))}
+    hou.undos.performUndo()  # one undo step per tick
+    assert tmp in intended(sub)
 
 
-def test_network_box_scope_two_exits_and_comment_declaration():
-    from attribute_helper.adapter.scope import boundaries, collect_scope
+def test_network_box_scope_two_exits_and_ticks_on_parent():
+    from attribute_helper.adapter.scope import PARM, boundaries, collect_scope, intended, set_intended
+    from attribute_helper.core.policy import Finding
 
     g = geo()
     src = sop(g, "attribwrangle", sop(g, "box"), snippet="f@a = 1;")
@@ -187,14 +190,17 @@ def test_network_box_scope_two_exits_and_comment_declaration():
     pairs = {e.name(): sorted(n.name() for n in ins) for e, ins in boundaries(box)}
     assert pairs == {left.name(): [src.name()], right.name(): sorted([src.name(), other.name()])}
 
-    box.setComment("my scope\ninout: a\nout: tmp")
-    decl, results, problems = collect_scope(box, SnapshotCache(), cook=True)
-    assert not problems and decl.inout == ["a"]
-    assert all(r.violations == [] for r in results)
-    box.setComment("my scope\nout: tmp")
-    _, results, _ = collect_scope(box, SnapshotCache(), cook=True)
-    by_exit = {r.exit: [(v.kind, v.name) for v in r.violations] for r in results}
-    assert by_exit == {left.path(): [], right.path(): [("undeclared write", "a")]}
+    _, results, problems = collect_scope(box, SnapshotCache(), cook=True)
+    by_exit = {r.exit: r.report for r in results}
+    assert not problems
+    assert by_exit[left.path()].leaked == [AttribKey("point", "tmp")]
+    assert by_exit[right.path()].written == [AttribKey("point", "a")]
+    assert by_exit[right.path()].deleted == []  # c is only on the side input: read, not deleted
+
+    written = Finding("written", AttribKey("point", "a"))
+    set_intended(box, written, True)
+    assert g.parm(PARM) is not None and box.name() in g.parm(PARM).evalAsString()
+    assert intended(box) == {written}
 
 
 def test_walk_enters_editable_subnet_but_not_locked_hda():

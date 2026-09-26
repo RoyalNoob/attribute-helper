@@ -30,7 +30,7 @@ Open New Pane Tab Type > Inspectors > Attribute Helper next to the network edito
    Dive back in: both return.
 9. **Row click:** click a row's name: its born node gets selected.
 10. **No scene changes:** after all of the above, Edit > Undo History shows only your own edits,
-    none from the panel.
+    none from the panel. (Ticking a leak-report finding is the one exception: see check 21.)
 11. **Close:** close the panel tab. Overlay gone; moving the mouse over the editor does not bring
     it back.
 
@@ -62,20 +62,22 @@ Wrangle (`f@tmp = 1;`) → Group Create (group name `top`), display flag on the 
 19. **Locked HDAs stay closed:** an Attribute Wrangle outside the subnet is one row source, not
     expanded (its internals never appear in Born).
 
-## Scope declarations (phase 6)
+## Intended findings (phase 6)
 
 Use the leak-report setup above (Box → wrangle `f@a = 1; f@b = 2;` → Subnet that writes `a`,
 creates `tmp`, deletes `b`).
 
-20. **No declaration:** the Leak report tab says "No declaration…", and the Declaration column is empty.
-21. **Subnet parameters:** on the Subnet, add spare string parameters `scope_inout` = `a` and
-    `scope_out` = `tmp height` (Edit Parameter Interface). The tab shows the declaration line;
-    `tmp` and `a` say "ok"; `b` is red "undeclared delete"; a "Declared outputs with problems"
-    section lists `height` as "missing output". Status: 2 violation(s).
-22. **Network box:** put the wrangle and Attribute Delete of the depth setup (or any two nodes in a
-    chain) in a network box. Select the box, click "Use selected subnet / HDA / box". Set the box
-    comment to `inout: a` on one line and `out: tmp` on the next. Violations update without clicking.
-23. **Two exits:** wire a second node from inside the box to outside. The tree shows one "Exit:"
-    group per exit.
-24. **Side input:** a wrangle with a second input no longer shows that input's attributes as
-    deleted (Lifetime tab and Leak report).
+20. **Nothing ticked:** every finding has an empty tickbox and is red. Status: "3 finding(s) not
+    marked intended." The Subnet's parameter pane shows no new parameter.
+21. **Tick:** tick `tmp`. It turns normal color; status says 2. Edit > Undo History has one
+    "Attribute Helper: mark finding intended" entry. Undo: `tmp` is red again.
+22. **Saved and hidden:** tick `tmp` again, save, reopen the hip file, reopen the panel and pick the
+    Subnet: `tmp` is still ticked. The parameter pane shows nothing new (the parameter is hidden;
+    Edit Parameter Interface lists `attribute_helper_intended`).
+23. **Stale tick:** change the inner wrangle so it no longer creates `tmp`. A section "Marked intended,
+    no longer found" lists `tmp (leaked)`. Untick it: the section disappears.
+24. **Network box:** box two chained nodes, select the box, "Use selected subnet / HDA / box". Tick a
+    finding. It is stored on the Geometry node (hidden), and survives reselecting the box.
+25. **Two exits:** wire a second node from inside the box to outside. One "Exit:" group per exit.
+26. **Side input:** a wrangle with a second input does not show that input's attributes as deleted
+    (Lifetime tab and Leak report).

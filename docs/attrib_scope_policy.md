@@ -103,37 +103,26 @@ Limit: When a node creates new elements, "the outer value" has no single correct
 
 ## 7. Decisions for the viewer (2026-09-26)
 
-These fix what the attribute-helper viewer reads. They do not decide enforcement.
+These fix what the attribute-helper viewer does. They do not decide enforcement.
 
 1. **A scope is a subnet, an HDA, or a network box.**
    - Subnet / HDA: entry = its inputs, exit = its output.
    - Network box: entries = outside nodes wired into the box; exits = nodes in the box whose output
      leaves the box (or, if none, the box's last nodes). One report per exit, compared only with the
-     entries upstream of that exit. Membership includes nested boxes.
+     entries upstream of that exit; the entry on the exit's first-input chain is the main entry.
+     Membership includes nested boxes.
    - A box can be checked but not enforced: End (§3.2) cannot rebuild a box's output without
-     inserting nodes. Enforcing a box scope means converting it to a subnet or Begin/End pair.
-   - A Begin/End block is not a viewer scope yet; add it when that tool defines its node types.
-2. **Where the lists live.**
-   - Subnet / HDA: spare string parameters `scope_in`, `scope_inout`, `scope_out`.
-   - Network box (no parameters): the box comment, one list per line:
-     `in: *`, `inout: P Cd`, `out: mask -> fx_mask`. Other comment lines are ignored.
-3. **List syntax.** Entries separated by spaces or commas. Houdini-style patterns: `*`, `?`, and
-   `^name` to exclude; later entries win. `group:name` refers to a group (any group class).
-   `a -> b` in `out` is a rename: it is parsed and shown, and `a` counts as declared, but
-   collisions are not checked for renamed outputs until End defines what a rename does.
-4. **What the viewer flags** (compared with the leak report of each exit):
-
-   | Finding | Flag when |
-   |---|---|
-   | Leaked local | not matched by `out` |
-   | Outer write (hint) | not matched by `inout` |
-   | Deleted outer attribute | not matched by `inout` |
-   | Missing output | a literal (non-pattern) `out` name is not alive at the exit |
-   | Collision | a literal, non-renamed `out` name exists at the entry and is not in `inout` |
-   | Unknown (topology changed) | never flagged; shown as unknown |
-
-   `in` is shown but not checked: reads are not visible in cooked geometry (this answers §8 Q2 for
-   the viewer: documentation only).
+     inserting nodes.
+2. **No in/inout/out lists in the viewer.** Declaring the signature up front, as text, was found
+   clunky and unintuitive in use. Instead, the user reviews the leak report and ticks each finding
+   (leaked, written, deleted, unknown) that is **intended**. Unticked findings are the problems.
+   The enforcement design in §3 may need the same rethink.
+3. **Storage.** One hidden string parameter, `attribute_helper_intended`, created on the first tick,
+   edited only by the tool (one undo step per tick). One line per finding:
+   `<scope> <kind> <class> <name>`. Scope is `.` for the subnet/HDA that holds the parameter, or a
+   network box name: a box has no parameters, so its list lives on the network that contains it.
+   Renaming a box loses its ticks.
+4. Ticks that no longer match a finding are shown separately, so they can be removed.
 
 ## 8. Open questions
 

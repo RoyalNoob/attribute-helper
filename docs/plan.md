@@ -30,7 +30,8 @@ This tool shows the lifetime of each attribute in the network editor. The user t
 
 ### Non-goals
 
-1. The tool does not change geometry, node colors, or parameters.
+1. The tool does not change geometry, node colors, or parameters. One exception (2026-09-26): ticking
+   a finding "intended" in the leak report writes one hidden string parameter, as one undo step.
 2. The tool does not enforce a scope policy. Enforcement is a different project.
 3. The tool does not find attribute **reads**. Reads are not visible in cooked geometry. (A later phase can add a heuristic.)
 4. The tool does not support contexts other than SOPs in v1.
@@ -251,7 +252,8 @@ Done when:
 1. The user opens the panel, uses the display node as the target, and sees all attributes of the chain.
 2. A toggle shows and hides the overlay for one attribute.
 3. The overlay follows the nodes when the user moves them.
-4. The scene has no changes after use (no undo entries, no changed parameters).
+4. The scene has no changes after use (no undo entries, no changed parameters), except the hidden
+   intended-findings parameter when the user ticks a finding.
 
 ### Phase 4: Leak report
 

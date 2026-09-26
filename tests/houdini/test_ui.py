@@ -64,23 +64,36 @@ def test_gui_modules_import_without_gui():
     import attribute_helper.ui.panel  # noqa: F401
 
 
-def test_leak_tab_marks_violations():
+def test_leak_tab_ticks_and_stale_section():
     from PySide6 import QtWidgets
     from attribute_helper.adapter.scope import ExitResult
-    from attribute_helper.core.policy import Violation
+    from attribute_helper.core.policy import Finding
     from attribute_helper.core.report import LeakReport
     from attribute_helper.ui.leak_tab import RED, LeakTab
 
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])  # noqa: F841
     tab = LeakTab()
-    report = LeakReport([AttribKey("point", "tmp"), AttribKey("point", "fx")], [],
-                        [AttribKey("point", "b")], [])
-    violations = [Violation("undeclared leak", "tmp", "point"), Violation("missing output", "h")]
-    tab._fill([ExitResult("/obj/g/sub", report, violations)])
+    saved = []
+    tab.scope = object()
+    import attribute_helper.ui.leak_tab as leak_tab
+    original, leak_tab.set_intended = leak_tab.set_intended, lambda scope, f, on: saved.append((f, on))
+    try:
+        _check_leak_tab(tab, saved, RED, Finding, LeakReport, ExitResult)
+    finally:
+        leak_tab.set_intended = original
+
+
+def _check_leak_tab(tab, saved, RED, Finding, LeakReport, ExitResult):
+
+    tmp, fx = AttribKey("point", "tmp"), AttribKey("point", "fx")
+    gone = Finding("deleted", AttribKey("point", "old"))
+    tab._fill({Finding("leaked", fx), gone}, [ExitResult("/obj/g/sub", LeakReport([tmp, fx], [], [], []))])
+    assert saved == []  # filling must not save
     top = [tab.tree.topLevelItem(i) for i in range(tab.tree.topLevelItemCount())]
-    assert [t.text(0).rsplit(": ", 1)[1] for t in top] == ["2", "0", "1", "0", "1"]
-    leaked = {top[0].child(i).text(0): top[0].child(i) for i in range(2)}
-    assert leaked["tmp"].text(2) == "undeclared leak"
-    assert leaked["tmp"].foreground(0) == RED
-    assert leaked["fx"].text(2) == "ok"
-    assert top[4].child(0).text(0) == "h" and top[4].child(0).text(2) == "missing output"
+    assert [t.text(0).rsplit(": ", 1)[1] for t in top] == ["2", "0", "0", "0", "1"]
+    rows = {top[0].child(i).text(0): top[0].child(i) for i in range(2)}
+    assert rows["tmp"].checkState(0) == Qt.Unchecked and rows["tmp"].foreground(0) == RED
+    assert rows["fx"].checkState(0) == Qt.Checked
+    assert top[4].child(0).text(0) == "old (deleted)"
+    rows["tmp"].setCheckState(0, Qt.Checked)
+    assert saved == [(Finding("leaked", tmp), True)]

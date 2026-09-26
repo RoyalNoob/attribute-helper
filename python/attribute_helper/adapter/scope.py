@@ -1,26 +1,45 @@
-"""Scopes: a subnet, an HDA, or a network box (docs/attrib_scope_policy.md §7)."""
+"""Scopes: a subnet, an HDA, or a network box (docs/attrib_scope_policy.md §7).
+
+Intended findings live in one hidden string parameter, PARM. A subnet/HDA keeps its own list
+on itself (scope id "."). A network box has no parameters, so its list lives on the network
+that contains it, under the box name (renaming the box loses its ticks).
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass
 
 import hou
 
-from ..core.policy import Declaration, Violation, check, from_comment, from_lists
+from ..core.policy import SELF, Finding, parse, toggle
 from ..core.report import LeakReport, leak_report
 from .snapshot import SnapshotCache
 
-PARMS = ("scope_in", "scope_inout", "scope_out")
+PARM = "attribute_helper_intended"
 
 
-def declaration(scope) -> Declaration | None:
-    """Subnet/HDA: spare parms scope_in/inout/out. Box: `in:`/`inout:`/`out:` comment lines."""
+def _home(scope) -> tuple[hou.Node, str]:
+    """The node that stores the scope's list, and the scope id used in it."""
     if isinstance(scope, hou.NetworkBox):
-        return from_comment(scope.comment())
-    parms = [scope.parm(name) for name in PARMS]
-    if all(p is None for p in parms):
-        return None
-    values = [p.evalAsString() if p else default for p, default in zip(parms, ("*", "", ""))]
-    return from_lists(*values)
+        return scope.parent(), scope.name()
+    return scope, SELF
+
+
+def intended(scope) -> set[Finding]:
+    node, scope_id = _home(scope)
+    parm = node.parm(PARM)
+    return parse(parm.evalAsString()).get(scope_id, set()) if parm else set()
+
+
+def set_intended(scope, finding: Finding, on: bool) -> None:
+    """Tick or untick one finding. Creates the hidden parameter on first use. One undo step."""
+    node, scope_id = _home(scope)
+    with hou.undos.group("Attribute Helper: mark finding intended"):
+        parm = node.parm(PARM)
+        if parm is None:
+            node.addSpareParmTuple(hou.StringParmTemplate(
+                PARM, "Intended findings (Attribute Helper)", 1, is_hidden=True))
+            parm = node.parm(PARM)
+        parm.set(toggle(parm.evalAsString(), scope_id, finding, on))
 
 
 def _entries(exit: hou.Node, members: set[str]) -> list[hou.Node]:
@@ -70,13 +89,12 @@ def boundaries(scope) -> list[tuple[hou.Node, list[hou.Node]]]:
 @dataclass(frozen=True)
 class ExitResult:
     exit: str
-    report: LeakReport | None           # None when a snapshot is missing (see problems)
-    violations: list[Violation] | None  # None when the scope has no declaration
+    report: LeakReport | None  # None when a snapshot is missing (see problems)
 
 
 def collect_scope(scope, cache: SnapshotCache, cook: bool = False
-                  ) -> tuple[Declaration | None, list[ExitResult], dict[str, str]]:
-    decl = declaration(scope)
+                  ) -> tuple[set[Finding], list[ExitResult], dict[str, str]]:
+    """Intended findings, one leak report per exit, and a reason for each missing snapshot."""
     results: list[ExitResult] = []
     problems: dict[str, str] = {}
     for exit, entries in boundaries(scope):
@@ -87,11 +105,8 @@ def collect_scope(scope, cache: SnapshotCache, cook: bool = False
                 problems[node.path()] = reason
             else:
                 snaps[node.path()] = snap
-        if any(n.path() not in snaps for n in [*entries, exit]):
-            results.append(ExitResult(exit.path(), None, None))
-            continue
-        entry_snaps, exit_snap = [snaps[n.path()] for n in entries], snaps[exit.path()]
-        report = leak_report(entry_snaps, exit_snap)
-        violations = check(decl, report, entry_snaps, exit_snap) if decl else None
-        results.append(ExitResult(exit.path(), report, violations))
-    return decl, results, problems
+        report = None
+        if all(n.path() in snaps for n in [*entries, exit]):
+            report = leak_report([snaps[n.path()] for n in entries], snaps[exit.path()])
+        results.append(ExitResult(exit.path(), report))
+    return intended(scope), results, problems
