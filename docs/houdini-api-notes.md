@@ -1,4 +1,4 @@
-# Houdini API notes: attrib-lifetime
+# Houdini API notes: attribute-helper
 
 Checked against **Houdini 22.0.429** with hython, 2026-09-26. These results come from
 introspection and one small test network. They are not a full run of the spikes.

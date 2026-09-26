@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pythonPanelDocument>
-  <interface name="attrib_lifetime" label="Attribute Lifetime" icon="MISC_python" showNetworkNavigationBar="false" help_url="">
+  <interface name="attribute_helper" label="Attribute Helper" icon="MISC_python" showNetworkNavigationBar="false" help_url="">
     <script><![CDATA[
 # Spike S4: a table that proves the panel loads and can import from the package.
 from PySide6 import QtWidgets, QtGui
-import attrib_lifetime
+import attribute_helper
 
 
 def onCreateInterface():
     model = QtGui.QStandardItemModel(2, 2)
     model.setHorizontalHeaderLabels(["check", "value"])
-    for row, (k, v) in enumerate([("attrib_lifetime imported from", attrib_lifetime.__file__),
+    for row, (k, v) in enumerate([("attribute_helper imported from", attribute_helper.__file__),
                                   ("PySide", QtWidgets.__name__)]):
         model.setItem(row, 0, QtGui.QStandardItem(k))
         model.setItem(row, 1, QtGui.QStandardItem(v))

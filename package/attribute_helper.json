@@ -1,0 +1,7 @@
+{
+    "env": [
+        {"ATTRIBUTE_HELPER": "$HOUDINI_PACKAGE_PATH/.."},
+        {"PYTHONPATH": {"value": "$ATTRIBUTE_HELPER/python", "method": "prepend"}}
+    ],
+    "hpath": "$ATTRIBUTE_HELPER"
+}

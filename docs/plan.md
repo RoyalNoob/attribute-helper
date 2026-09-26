@@ -1,6 +1,6 @@
 # Attribute Lifetime Viewer: Project Plan
 
-Working name: `attrib-lifetime`
+Name: `attribute-helper`
 Target: Houdini 22 (primary). Houdini 21 support is a stretch goal.
 Type: Open source Python Panel for the Houdini network editor.
 Related document: `attrib_scope_policy.md` (the future scope policy).
@@ -160,7 +160,7 @@ Method: node event callbacks on the chain nodes, plus a light panel timer as a f
 ## 6. Repository layout
 
 ```
-attrib-lifetime/
+attribute-helper/
   README.md
   LICENSE
   CONTRIBUTING.md
@@ -171,9 +171,9 @@ attrib-lifetime/
     attrib_scope_policy.md
     spikes/                       # results of the spikes in section 7
   package/
-    attrib_lifetime.json          # Houdini package file
+    attribute_helper.json          # Houdini package file
   python/
-    attrib_lifetime/
+    attribute_helper/
       __init__.py
       core/
         model.py
@@ -191,7 +191,7 @@ attrib-lifetime/
         panel.py
         table_model.py
   python_panels/
-    attrib_lifetime.pypanel
+    attribute_helper.pypanel
   tests/
     core/                         # pytest, no Houdini
       fixtures/                   # JSON graphs and snapshots
@@ -202,7 +202,7 @@ attrib-lifetime/
 
 ### 6.1 Installation (Houdini package)
 
-The user copies `package/attrib_lifetime.json` into `$HOUDINI_USER_PREF_DIR/packages/` and sets the path of the repository in the file. The package adds the repository to `HOUDINI_PATH` and the `python/` folder to `PYTHONPATH`. Spike S5 confirms the package syntax.
+The user copies `package/attribute_helper.json` into `$HOUDINI_USER_PREF_DIR/packages/` and sets the path of the repository in the file. The package adds the repository to `HOUDINI_PATH` and the `python/` folder to `PYTHONPATH`. Spike S5 confirms the package syntax.
 
 ## 7. Spikes (do these first)
 
@@ -297,7 +297,7 @@ Decisions for the maintainer:
 
 1. **License:** MIT or Apache-2.0. (Apache-2.0 adds a patent grant.)
 2. **Supported versions:** Houdini 22 only, or 21 and 22.
-3. **Name:** `attrib-lifetime` is a working name.
+3. **Name:** `attribute-helper` (decided).
 
 Files for the first public release: README with a GIF of the overlay, install steps, a list of known limits (section 4.2, non-goals), CONTRIBUTING with the test commands, and CHANGELOG.
 
@@ -312,13 +312,13 @@ Files for the first public release: README with a GIF of the overlay, install st
 ## Appendix A: Starter content for CLAUDE.md
 
 ```markdown
-# attrib-lifetime
+# attribute-helper
 
 Python Panel for Houdini 22 that shows attribute lifetimes in the network editor.
 Read docs/plan.md before you change the architecture.
 
 ## Rules
-- python/attrib_lifetime/core/ must not import hou. Keep it pure Python.
+- python/attribute_helper/core/ must not import hou. Keep it pure Python.
 - Do not change geometry, node colors, or parameters from the tool.
 - Do the spikes (docs/plan.md, section 7) before phase 1. Write each result to docs/spikes/.
 - If you are not sure of a hou or Qt API, write a spike. Do not guess.

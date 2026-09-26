@@ -1,11 +1,11 @@
 # TODO
 
 Single source of truth for progress. Update it in the same commit as the work.
-Milestones follow [docs/attrib_lifetime_plan.md](docs/attrib_lifetime_plan.md) §7–8.
+Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## Start here (onboarding / handover)
 
-1. Read, in order: [plan](docs/attrib_lifetime_plan.md), [API notes](docs/houdini-api-notes.md)
+1. Read, in order: [plan](docs/plan.md), [API notes](docs/houdini-api-notes.md)
    (overrides the plan where they differ), [CLAUDE.md](CLAUDE.md).
 2. `pip install pytest && pytest` — must pass with no Houdini installed.
 3. Find the first unchecked item below. That is the current task.
@@ -18,7 +18,7 @@ Milestones follow [docs/attrib_lifetime_plan.md](docs/attrib_lifetime_plan.md) �
 
 - [x] License: MIT
 - [ ] Supported versions: Houdini 22 only, or 21 and 22
-- [ ] Final project name (`attrib-lifetime` is a working name)
+- [x] Project name: `attribute-helper`
 
 ## Phase 0: Repository setup
 

@@ -1,7 +1,0 @@
-{
-    "env": [
-        {"ATTRIB_LIFETIME": "$HOUDINI_PACKAGE_PATH/.."},
-        {"PYTHONPATH": {"value": "$ATTRIB_LIFETIME/python", "method": "prepend"}}
-    ],
-    "hpath": "$ATTRIB_LIFETIME"
-}

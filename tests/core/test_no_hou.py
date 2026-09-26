@@ -1,7 +1,7 @@
 import ast
 from pathlib import Path
 
-CORE = Path(__file__).parents[2] / "python" / "attrib_lifetime" / "core"
+CORE = Path(__file__).parents[2] / "python" / "attribute_helper" / "core"
 
 
 def test_core_does_not_import_hou():
