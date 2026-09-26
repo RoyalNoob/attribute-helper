@@ -13,7 +13,7 @@ Read docs/houdini-api-notes.md before you use a hou API; it overrides the plan w
 - Houdini 22 ships PySide6 only: import PySide6 directly, no qt_compat layer.
 
 ## Commands
-- Core tests: pytest --cov=attribute_helper.core  (CI requires 90%)
+- Core tests (run before every commit; no CI): pytest --cov=attribute_helper.core --cov-fail-under=90
 - Houdini tests: hython tools/run_hython_tests.py
 
 ## Style

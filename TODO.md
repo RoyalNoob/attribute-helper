@@ -7,7 +7,8 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 1. Read, in order: [plan](docs/plan.md), [API notes](docs/houdini-api-notes.md)
    (overrides the plan where they differ), [CLAUDE.md](CLAUDE.md).
-2. `pip install pytest && pytest` — must pass with no Houdini installed.
+2. `pip install pytest pytest-cov && pytest --cov=attribute_helper.core --cov-fail-under=90`
+   — must pass with no Houdini installed.
 3. Find the first unchecked item below. That is the current task.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
@@ -17,6 +18,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 ## Decisions
 
 - [x] License: MIT
+- [x] No CI: run `pytest` locally before committing
 - [ ] Supported versions: Houdini 22 only, or 21 and 22
 - [x] Project name: `attribute-helper`
 
@@ -24,8 +26,6 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 - [x] Layout skeleton, README stub, CLAUDE.md, LICENSE, .gitignore
 - [x] pytest config + `core/` must-not-import-`hou` test
-- [x] GitHub Actions workflow
-- [ ] Push to GitHub and confirm CI is green
 
 ## Spikes (S1–S4 block phase 1; results go in `docs/spikes/`)
 
@@ -44,7 +44,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - [x] `lifetime`, `summary`
 - [x] Fixtures: linear chain, branch + merge, generator, deleted attrib, same name in two classes
       (built in code by `snap()` in tests/core/test_states.py, not JSON files)
-- [x] Every state rule unit-tested; `core/` coverage 100%, CI fails under 90%
+- [x] Every state rule unit-tested; `core/` coverage 100%
 
 ## Phase 2: Adapter
 
@@ -96,3 +96,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: S4 done (menu XML in a subMenu; GUI reads Documents/houdini22.0 prefs).
 - 2026-09-26: S6 done. All spikes done; phase 1 unblocked.
 - 2026-09-26: Phase 1 done: model + states, 14 tests, 100% core coverage. CI on Python 3.13.
+- 2026-09-26: Dropped CI (decision); tests run locally.

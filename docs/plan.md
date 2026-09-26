@@ -223,9 +223,9 @@ Each spike is a small hython or UI test. Each spike writes a short result file i
 ### Phase 0: Repository setup
 
 - Repository layout of section 6, license, README stub, `CLAUDE.md`.
-- pytest runs on `tests/core/` in CI (GitHub Actions). CI does not need Houdini.
+- pytest runs on `tests/core/` locally. No CI (decided 2026-09-26).
 
-Done when: CI passes with one placeholder test.
+Done when: pytest passes with one placeholder test.
 
 ### Phase 1: Core
 
@@ -272,13 +272,13 @@ Done when: a test subnet with one leaked local, one outer write, and one deleted
 
 | Level | Tool | Runs where |
 |---|---|---|
-| Core unit tests | pytest | CI and local |
+| Core unit tests | pytest | Local |
 | Adapter tests | hython scripts that build networks with code | Local (needs a Houdini license) |
 | UI checks | Manual checklist in `docs/ui_checklist.md` | Local |
 
 Rules:
 
-1. `core/` never imports `hou`. A CI test checks this rule.
+1. `core/` never imports `hou`. A test checks this rule.
 2. Every bug fix adds a fixture or a hython test.
 
 ## 10. Risks
