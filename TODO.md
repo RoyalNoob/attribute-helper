@@ -85,7 +85,8 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## First public release
 
-- [ ] README: overlay GIF, install steps, known limits
+- [x] README: user manual, install steps, known limits
+- [ ] README: overlay GIF / screenshots
 - [ ] CONTRIBUTING.md with test commands
 - [ ] CHANGELOG.md
 
@@ -110,3 +111,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Phase 6 built: declarations, violation checks, box scopes. Deleted rule now first-input only.
 - 2026-09-26: Replaced in/inout/out with per-finding "intended" ticks (hidden parm `attribute_helper_intended`).
 - 2026-09-26: Ticks record intent (leaked / changed / deleted); written and unknown share "changed", so a Merge no longer makes ticks stale.
+- 2026-09-26: User manual in README.md.
