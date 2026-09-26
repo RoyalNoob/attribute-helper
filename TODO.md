@@ -32,9 +32,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - [x] S1 data ID readable from Python for all four classes → [data_ids.md](docs/spikes/data_ids.md)
 - [x] S2 false "Written" table → [data_ids.md](docs/spikes/data_ids.md)
 - [x] S3 overlay shapes: follow moves, pan/zoom, dive → pending-action method ([s3_overlay.md](docs/spikes/s3_overlay.md))
-      — stop fix (action completes itself) needs one GUI recheck
-- [ ] S4 test panel with one table opens from the pane menu
-      — partial: found + imports OK in hython; menu entry via PaneTabTypeMenu.xml awaits GUI check ([s4_s5](docs/spikes/s4_s5_panel_package.md))
+- [x] S4 panel opens from New Pane Tab Type > Inspectors → [s4_s5](docs/spikes/s4_s5_panel_package.md)
 - [x] S5 package JSON loads the panel from a clean user pref folder → [s4_s5](docs/spikes/s4_s5_panel_package.md)
 - [ ] S6 cook / network-change callbacks and cost; pick redraw method
 - [x] S7 group data IDs in HOM → yes, same type ([data_ids.md](docs/spikes/data_ids.md))
@@ -94,3 +92,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: S5 done. S3 script and S4 panel written; both wait for a GUI check.
 - 2026-09-26: S3 round 1 failed; cause found in nodegraph.py; round 2 script written.
 - 2026-09-26: S3 passes with pending-action method. S4 needed PaneTabTypeMenu.xml.
+- 2026-09-26: S4 done (menu XML in a subMenu; GUI reads Documents/houdini22.0 prefs).

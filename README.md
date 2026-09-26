@@ -7,12 +7,12 @@ Status: pre-alpha (phase 0). See [docs/plan.md](docs/plan.md).
 
 ## Install
 
-Create `$HOUDINI_USER_PREF_DIR/packages/attribute_helper.json` (for example
+Create `$HOUDINI_USER_PREF_DIR/packages/attribute_helper.json` (on Windows
 `Documents/houdini22.0/packages/`) with the path to this repo's `package` folder:
 
     {"package_path": "E:/Repo/attribute-helper/package"}
 
-Restart Houdini. The panel is in the pane-tab menu as **Attribute Helper**.
+Restart Houdini. The panel is in the New Pane Tab Type > Inspectors > **Attribute Helper**.
 
 ## Development
 

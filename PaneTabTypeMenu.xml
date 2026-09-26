@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Merged by Houdini into New Pane Tab Type (the repo is on HOUDINI_PATH via the package). -->
+<!-- Merged by Houdini into New Pane Tab Type (the repo is on HOUDINI_PATH via the package).
+     Supplementary files must add items inside an existing subMenu, as Labs and KineFX do. -->
 <menuDocument>
     <menu>
-        <actionItem id="pythonpanel::attribute_helper">
-            <label>Attribute Helper</label>
-        </actionItem>
+        <subMenu id="panetype_inspectors">
+            <actionItem id="pythonpanel::attribute_helper">
+                <label>Attribute Helper</label>
+                <insertAfter>pythonpanel::sidefx::node_info</insertAfter>
+            </actionItem>
+        </subMenu>
     </menu>
 </menuDocument>
