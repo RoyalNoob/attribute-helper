@@ -4,4 +4,6 @@ __pycache__/
 *.hip
 *.hiplc
 *.hipnc
+*.hdalc
+*.hdanc
 backup/
