@@ -32,6 +32,16 @@ introspection and one small test network. They are not a full run of the spikes.
    `geometry()` call and `False` after it. "Cooked only" mode must check
    `needsToCook()` *before* it calls `geometry()`.
 
+## Adapter findings (phase 2)
+
+6. `Geometry.topologyDataId()` also returns `hou.AttribDataId`; use `.vexAttribDataId()`.
+7. Inside a subnet, `node.inputs()` resolves an indirect input straight to the node **outside**
+   the subnet. Network dots are resolved too. The walk stops at a node whose parent is another level.
+8. A node that fails to cook returns `geometry() is None` and keeps `needsToCook() == True`.
+   `errors()` reports the last cook without cooking. Check errors before `needsToCook()`.
+9. `inputs()` on a Merge with input 0 empty and input 1 connected returned one element, so input
+   indices are not reliable from `inputs()`. The core does not need them.
+
 ## Not yet verified
 
 - S2 across the full node list (Merge, Copy to Points, Pack, Clean, For-Each, Compile).

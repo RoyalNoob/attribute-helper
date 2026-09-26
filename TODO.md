@@ -13,7 +13,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Phase 2 (adapter)
+**Current milestone:** Phase 3 (MVP panel)
 
 ## Decisions
 
@@ -48,12 +48,12 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## Phase 2: Adapter
 
-- [ ] Graph walk (current network level, input order)
-- [ ] Snapshot from `node.geometry()`
-- [ ] Cache keyed on (`sessionId()`, `cookCount()`)
-- [ ] Cook policy: "cooked only" checks `needsToCook()` before `geometry()`; "cook on demand"
-- [ ] Cook errors → empty snapshot + error flag, walk continues
-- [ ] hython tests building networks in code (no committed .hip files)
+- [x] Graph walk (current network level; stops at subnet boundary, resolves dots)
+- [x] Snapshot from `node.geometry()`
+- [x] Cache keyed on (`sessionId()`, `cookCount()`)
+- [x] Cook policy: "cooked only" never cooks (tested with cook counts); "cook on demand"
+- [x] Cook errors → no snapshot + reason (not an empty snapshot, which would fake Born/Deleted); walk continues
+- [x] hython tests building networks in code: `hython tools/run_hython_tests.py` (9 tests)
 
 ## Phase 3: MVP panel
 
@@ -97,3 +97,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: S6 done. All spikes done; phase 1 unblocked.
 - 2026-09-26: Phase 1 done: model + states, 14 tests, 100% core coverage. CI on Python 3.13.
 - 2026-09-26: Dropped CI (decision); tests run locally.
+- 2026-09-26: Phase 2 done: adapter (walk, snapshot, cache, cook policy), 9 hython tests.
