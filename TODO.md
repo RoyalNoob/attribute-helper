@@ -12,7 +12,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Spikes
+**Current milestone:** Phase 1 (core)
 
 ## Decisions
 
@@ -34,7 +34,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - [x] S3 overlay shapes: follow moves, pan/zoom, dive → pending-action method ([s3_overlay.md](docs/spikes/s3_overlay.md))
 - [x] S4 panel opens from New Pane Tab Type > Inspectors → [s4_s5](docs/spikes/s4_s5_panel_package.md)
 - [x] S5 package JSON loads the panel from a clean user pref folder → [s4_s5](docs/spikes/s4_s5_panel_package.md)
-- [ ] S6 cook / network-change callbacks and cost; pick redraw method
+- [x] S6 no cook event exists → poll cache keys with a QTimer ([s6_events.md](docs/spikes/s6_events.md))
 - [x] S7 group data IDs in HOM → yes, same type ([data_ids.md](docs/spikes/data_ids.md))
 
 ## Phase 1: Core (pure Python)
@@ -59,7 +59,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - [ ] Header: target field, use display node, pick, cook-mode toggle, refresh
 - [ ] Table (`QAbstractTableModel` + `QSortFilterProxyModel`) with filters
 - [ ] Overlay for toggled keys on one network level
-- [ ] Redraw on toggle / target change / recook / node move / level change
+- [ ] Redraw: QTimer poll of pwd + cache keys (S6); overlay via pending action (S3)
 - [ ] Acceptance: overlay follows moved nodes; no undo entries or param changes after use
 - [ ] `docs/ui_checklist.md`
 
@@ -93,3 +93,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: S3 round 1 failed; cause found in nodegraph.py; round 2 script written.
 - 2026-09-26: S3 passes with pending-action method. S4 needed PaneTabTypeMenu.xml.
 - 2026-09-26: S4 done (menu XML in a subMenu; GUI reads Documents/houdini22.0 prefs).
+- 2026-09-26: S6 done. All spikes done; phase 1 unblocked.
