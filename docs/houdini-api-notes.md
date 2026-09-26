@@ -42,6 +42,10 @@ introspection and one small test network. They are not a full run of the spikes.
 9. `inputs()` on a Merge with input 0 empty and input 1 connected returned one element, so input
    indices are not reliable from `inputs()`. The core does not need them.
 
+10. Python Panel hooks are `onCreateInterface`, `onDestroyInterface`, `onActivateInterface`,
+    `onDeactivateInterface`, `onNodePathChanged` (from `$HFS/houdini/python_panels`). A function named
+    `onDestroy` is silently never called.
+
 ## Not yet verified
 
 - S2 across the full node list (Merge, Copy to Points, Pack, Clean, For-Each, Compile).

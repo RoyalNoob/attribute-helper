@@ -13,7 +13,7 @@ def onCreateInterface():
     return panel
 
 
-def onDestroy():
+def onDestroyInterface():
     if panel is not None:
         panel.shutdown()
 ]]></script>
