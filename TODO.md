@@ -32,9 +32,10 @@ Milestones follow [docs/attrib_lifetime_plan.md](docs/attrib_lifetime_plan.md) �
 - [x] S1 data ID readable from Python for all four classes → [data_ids.md](docs/spikes/data_ids.md)
 - [x] S2 false "Written" table → [data_ids.md](docs/spikes/data_ids.md)
 - [ ] S3 overlay shapes: outline on a node, line on a wire, follow node moves
+      — script ready: [s3_overlay.py](docs/spikes/s3_overlay.py); GUI check pending
 - [ ] S4 test panel with one table opens from the pane menu
-      — partial: PySide6 6.8.3 confirmed; `.pypanel` loading from a package not yet tested
-- [ ] S5 package JSON loads the panel from a clean user pref folder
+      — partial: found + imports OK in hython; GUI check pending ([s4_s5](docs/spikes/s4_s5_panel_package.md))
+- [x] S5 package JSON loads the panel from a clean user pref folder → [s4_s5](docs/spikes/s4_s5_panel_package.md)
 - [ ] S6 cook / network-change callbacks and cost; pick redraw method
 - [x] S7 group data IDs in HOM → yes, same type ([data_ids.md](docs/spikes/data_ids.md))
 
@@ -90,3 +91,4 @@ Milestones follow [docs/attrib_lifetime_plan.md](docs/attrib_lifetime_plan.md) �
 
 - 2026-09-26: Phase 0 skeleton, MIT license, TODO.md. API notes already cover part of S1/S2/S4.
 - 2026-09-26: S1, S2, S7 done (hython). Topology change invalidates data IDs → new `REBUILT` state.
+- 2026-09-26: S5 done. S3 script and S4 panel written; both wait for a GUI check.
