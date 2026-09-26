@@ -62,3 +62,16 @@ def test_toggle_assigns_distinct_colors_and_untoggles():
 def test_gui_modules_import_without_gui():
     import attribute_helper.overlay  # noqa: F401  (nodegraph is imported lazily)
     import attribute_helper.ui.panel  # noqa: F401
+
+
+def test_leak_tab_fills_sections():
+    from PySide6 import QtWidgets
+    from attribute_helper.core.report import LeakReport
+    from attribute_helper.ui.leak_tab import LeakTab
+
+    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])  # noqa: F841
+    tab = LeakTab()
+    tab._fill(LeakReport([AttribKey("point", "tmp")], [], [AttribKey("point", "b")], []))
+    titles = [tab.tree.topLevelItem(i).text(0) for i in range(tab.tree.topLevelItemCount())]
+    assert [t.rsplit(": ", 1)[1] for t in titles] == ["1", "0", "1", "0"]
+    assert tab.tree.topLevelItem(0).child(0).text(0) == "tmp"

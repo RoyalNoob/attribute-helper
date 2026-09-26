@@ -131,3 +131,21 @@ def test_fixed_node_recooks_in_cook_mode():
     wr.parm("snippet").set("f@mask = 1;")
     _, snaps, problems = collect(wr, cache, cook=True)
     assert not problems and PT_M in snaps[wr.path()].attribs
+
+
+def test_leak_report_plan_acceptance():
+    # Outside: a and b. Inside: writes a, deletes b, creates tmp. Exactly one of each.
+    from attribute_helper.adapter.snapshot import collect_leaks
+
+    g = geo()
+    outer = sop(g, "attribwrangle", sop(g, "box"), snippet="f@a = 1; f@b = 2;")
+    sub = sop(g, "subnet", outer)
+    write = sop(sub, "attribwrangle", sub.indirectInputs()[0], snippet="f@a = 5; f@tmp = 1;")
+    delete = sop(sub, "attribdelete", write, ptdel="b")
+    delete.setDisplayFlag(True)
+    report, problems = collect_leaks(sub, SnapshotCache(), cook=True)
+    assert not problems, problems
+    assert report.leaked == [AttribKey("point", "tmp")]
+    assert report.written == [AttribKey("point", "a")]
+    assert report.deleted == [AttribKey("point", "b")]
+    assert report.rebuilt == []

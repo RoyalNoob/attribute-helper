@@ -13,7 +13,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Phase 3 (MVP panel)
+**Current milestone:** Phase 4 (leak report)
 
 ## Decisions
 
@@ -57,19 +57,19 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## Phase 3: MVP panel
 
-- [ ] Header: follow display node, use selected, cook on demand, refresh — built, GUI check pending
-- [ ] Table (`QAbstractTableModel` + `QSortFilterProxyModel`) with filters — built, model/filter tested in hython
-- [ ] Overlay for toggled keys on one network level — built, GUI check pending
-- [ ] Redraw: QTimer poll of pwd + cache keys (S6); overlay via pending action (S3) — built
-- [ ] Acceptance: overlay follows moved nodes; no undo entries or param changes after use
+- [x] Header: follow display node, use selected, cook on demand, refresh
+- [x] Table (`QAbstractTableModel` + `QSortFilterProxyModel`) with filters
+- [x] Overlay for toggled keys on one network level
+- [x] Redraw: QTimer poll of pwd + cache keys (S6); overlay via pending action (S3)
+- [x] Acceptance: overlay follows moved nodes; no undo entries or param changes after use
 - [x] `docs/ui_checklist.md`
-- [ ] Run the checklist in the GUI
+- [x] Run the checklist in the GUI (all 11 pass)
 
 ## Phase 4: Leak report
 
-- [ ] `leak_report` in core (leaked locals, outer writes, deleted outer attribs)
-- [ ] Leak report tab
-- [ ] Acceptance: test subnet with exactly one of each gives exactly three results
+- [x] `leak_report` in core: the state rules across the subnet as one node (+ Unknown for topology changes)
+- [ ] Leak report tab — built; GUI checks 12–15 in docs/ui_checklist.md pending
+- [x] Acceptance: test subnet with exactly one of each gives exactly three results (hython test)
 
 ## Phase 5: Depth
 
@@ -100,3 +100,5 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Dropped CI (decision); tests run locally.
 - 2026-09-26: Phase 2 done: adapter (walk, snapshot, cache, cook policy), 9 hython tests.
 - 2026-09-26: Phase 3 built (panel, table, overlay, poll). Waiting on docs/ui_checklist.md in the GUI.
+- 2026-09-26: Phase 3 done: GUI checklist passes (close bug fixed: hook is onDestroyInterface).
+- 2026-09-26: Phase 4 built: leak report (core, adapter, tab). Acceptance test passes in hython.

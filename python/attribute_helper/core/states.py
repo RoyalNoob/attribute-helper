@@ -8,7 +8,8 @@ from .model import ALIVE, AttribKey, Graph, Snapshot, State
 States = dict[str, dict[AttribKey, State]]  # node_id -> key -> state (ABSENT keys omitted)
 
 
-def _state(key: AttribKey, snap: Snapshot, inputs: list[Snapshot]) -> State:
+def state_of(key: AttribKey, snap: Snapshot, inputs: list[Snapshot]) -> State:
+    """State of `key` on `snap`, given the snapshots of its inputs (plan §4.1)."""
     have = [i for i in inputs if key in i.attribs]
     if key not in snap.attribs:
         return State.DELETED if have else State.ABSENT
@@ -32,7 +33,7 @@ def compute_states(graph: Graph, snapshots: dict[str, Snapshot]) -> States:
         snap, inputs = snapshots[node], [snapshots[i] for i in ids]
         # Every key is on the node or an input, so ABSENT never appears here.
         keys = set(snap.attribs).union(*(i.attribs for i in inputs))
-        states[node] = {k: _state(k, snap, inputs) for k in keys}
+        states[node] = {k: state_of(k, snap, inputs) for k in keys}
     return states
 
 

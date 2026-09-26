@@ -10,6 +10,7 @@ from .. import overlay
 from ..adapter.snapshot import NEEDS_COOK, SnapshotCache, collect
 from ..core.model import Graph
 from ..core.states import States, compute_states, summary
+from .leak_tab import LeakTab
 from .table_model import AttribFilter, AttribTableModel
 
 POLL_MS = 250  # S6: an unchanged poll costs about 2 ms per 1000 nodes
@@ -59,18 +60,30 @@ class Panel(QtWidgets.QWidget):
         self.table.verticalHeader().hide()
         self.table.horizontalHeader().setStretchLastSection(True)
 
-        header = QtWidgets.QHBoxLayout()
-        for w in (self.follow, self.use_selected, self.cook, refresh):
+        header = QtWidgets.QHBoxLayout()  # shared by both tabs
+        for w in (self.cook, refresh):
             header.addWidget(w)
         header.addStretch()
+        target_row = QtWidgets.QHBoxLayout()
+        for w in (self.follow, self.use_selected):
+            target_row.addWidget(w)
+        target_row.addStretch()
         filters = QtWidgets.QHBoxLayout()
         for w in (self.search, self.cls, self.hide_std):
             filters.addWidget(w)
-        layout = QtWidgets.QVBoxLayout(self)
-        for part in (header, filters):
-            layout.addLayout(part)
+        lifetime = QtWidgets.QWidget()
+        page = QtWidgets.QVBoxLayout(lifetime)
+        for part in (target_row, filters):
+            page.addLayout(part)
         for w in (self.target, self.table, self.status):
-            layout.addWidget(w)
+            page.addWidget(w)
+        self.leaks = LeakTab()
+        self.tabs = QtWidgets.QTabWidget()
+        self.tabs.addTab(lifetime, "Lifetime")
+        self.tabs.addTab(self.leaks, "Leak report")
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.addLayout(header)
+        layout.addWidget(self.tabs)
 
         self.follow.toggled.connect(self._on_follow)
         self.use_selected.clicked.connect(self._on_use_selected)
@@ -81,6 +94,7 @@ class Panel(QtWidgets.QWidget):
         self.hide_std.toggled.connect(self._on_filter)
         self.model.toggled.connect(overlay.push)
         self.table.clicked.connect(self._on_row_clicked)
+        self.tabs.currentChanged.connect(lambda _: self.poll(force=True))
 
         overlay.install(self._shapes)
         self.timer = QtCore.QTimer(self, interval=POLL_MS, timeout=self.poll)
@@ -105,6 +119,8 @@ class Panel(QtWidgets.QWidget):
     def poll(self, force: bool = False) -> None:
         if not self.isVisible() and not force:
             return
+        if self.tabs.currentWidget() is self.leaks:
+            self.leaks.poll(self.cache, self.cook.isChecked(), force)
         target = self._target()
         if not isinstance(target, hou.SopNode):
             self._show(None, "No SOP target. Enter a SOP network, or select a SOP and click Use selected.")
