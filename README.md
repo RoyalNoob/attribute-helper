@@ -12,25 +12,38 @@ Status: pre-alpha. All six phases of [docs/plan.md](docs/plan.md) are done. Houd
 
 ## Install
 
-1. Get this repository onto your machine (clone or download).
-2. Create a file `attribute_helper.json` in your Houdini preferences `packages` folder, pointing
-   at this repository's `package` folder:
+1. Get this repository onto your machine (clone or download), anywhere you like.
+2. In Houdini, open **Windows** > **Python Shell** and run this line, with your path to
+   `install.py`:
 
-   ```json
-   {"package_path": "E:/Repo/attribute-helper/package"}
+   ```python
+   import runpy; runpy.run_path(r"E:/Repo/attribute-helper/install.py")
    ```
 
-   Use your own path, with forward slashes. The preferences folder is
-   `$HOUDINI_USER_PREF_DIR`: on Windows usually `Documents/houdini22.0`, on Linux
-   `~/houdini22.0`, on macOS `~/Library/Preferences/houdini/22.0`. Create `packages` if it does
-   not exist.
+   It prints where it installed. It only writes one small file,
+   `<Houdini prefs>/packages/attribute_helper.json`, which points Houdini at this folder.
 3. Restart Houdini.
 4. Open the panel: on any pane, click **+** > **New Pane Tab Type** > **Inspectors** >
    **Attribute Helper**. Put it next to a network editor.
 
-If the panel is not in the menu, the package was not loaded. On Windows, Houdini started from the
-Start menu reads `Documents/houdini22.0`, but a shell with `HOME` set (Git Bash) makes Houdini read
-`$HOME/houdini22.0` instead. Put the file in the folder that the Houdini you start actually uses.
+If you move the repository, run the install line again from the new place.
+
+<details>
+<summary>Install by hand instead</summary>
+
+Create `attribute_helper.json` in the `packages` folder of your Houdini preferences
+(`$HOUDINI_USER_PREF_DIR`: on Windows usually `Documents/houdini22.0`, on Linux `~/houdini22.0`,
+on macOS `~/Library/Preferences/houdini/22.0`), with your path and forward slashes:
+
+```json
+{"package_path": "E:/Repo/attribute-helper/package"}
+```
+
+On Windows, Houdini started from the Start menu reads `Documents/houdini22.0`, but a shell with
+`HOME` set (Git Bash) makes it read `$HOME/houdini22.0` instead. The install script avoids this by
+asking the running Houdini where its preferences are.
+
+</details>
 
 ## Quick start
 
@@ -201,7 +214,8 @@ This is the only change the tool ever makes to a scene.
 
 ## Uninstall
 
-Delete `attribute_helper.json` from your preferences `packages` folder and restart Houdini.
+Delete the `attribute_helper.json` file that the install script printed (in your Houdini
+preferences `packages` folder) and restart Houdini.
 Nodes where you ticked findings keep the hidden `attribute_helper_intended` parameter; remove it
 in Edit Parameter Interface if you want to.
 
