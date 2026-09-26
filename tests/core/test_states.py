@@ -142,3 +142,18 @@ def test_summary_skips_containers_so_inner_births_count_once():
     assert st["sub"][PT_M] == B
     rows = {r.key: r for r in summary(graph, st, {s.node_id: s for s in snaps})}
     assert rows[PT_M].born == ["inner"]
+
+
+def test_key_only_on_a_side_input_is_not_deleted():
+    # wrangle(box, lookup): output comes from box; lookup's attribute is read, not passed on.
+    _, _, st = run({"wr": ["box", "lookup"]},
+                   snap("box", point_P=1), snap("lookup", point_P=5, point_ref=6),
+                   snap("wr", point_P=1))
+    assert st["wr"] == {PT_P: P}  # ref is absent at wr, not deleted
+
+
+def test_key_from_side_input_that_reaches_output_is_pass_not_born():
+    _, _, st = run({"ctp": ["box", "pts"]},
+                   snap("box", topo=1, point_P=1), snap("pts", topo=2, point_s=6),
+                   snap("ctp", topo=3, point_P=7, point_s=6))
+    assert st["ctp"][AttribKey("point", "s")] == P

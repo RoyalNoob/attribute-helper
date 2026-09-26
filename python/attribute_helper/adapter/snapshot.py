@@ -4,7 +4,6 @@ from __future__ import annotations
 import hou
 
 from ..core.model import AttribInfo, AttribKey, Graph, Snapshot
-from ..core.report import LeakReport, leak_report
 from .graph import walk
 
 NEEDS_COOK = "needs cook"
@@ -81,22 +80,3 @@ def collect(target: hou.SopNode, cache: SnapshotCache, cook: bool = False
             snapshots[node_id] = snap
     return graph, snapshots, problems
 
-
-def collect_leaks(scope: hou.SopNode, cache: SnapshotCache, cook: bool = False
-                  ) -> tuple[LeakReport | None, dict[str, str]]:
-    """Leak report for a subnet or HDA: its output compared with its inputs.
-
-    Returns (None, problems) when the scope or one of its inputs has no snapshot.
-    """
-    inputs = [n for n in scope.inputs() if n is not None]
-    snaps: dict[str, Snapshot] = {}
-    problems: dict[str, str] = {}
-    for node in [*inputs, scope]:
-        snap, reason = cache.get(node, cook)
-        if snap is None:
-            problems[node.path()] = reason
-        else:
-            snaps[node.path()] = snap
-    if problems:
-        return None, problems
-    return leak_report([snaps[n.path()] for n in inputs], snaps[scope.path()]), {}

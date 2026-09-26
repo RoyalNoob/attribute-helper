@@ -13,7 +13,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Phase 6 (policy link) — design discussion
+**Current milestone:** Phase 6 (policy link) — GUI check
 
 ## Decisions
 
@@ -78,8 +78,11 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 ## Phase 6: Policy link
 
-- [ ] Read `in` / `inout` / `out` lists (see [scope policy](docs/attrib_scope_policy.md))
-- [ ] Flag violations in the table
+- [x] Decisions recorded in [scope policy §7](docs/attrib_scope_policy.md): scope = subnet / HDA / network box;
+      lists in spare parms `scope_in|inout|out` or box comment lines; Houdini-style patterns
+- [x] Read `in` / `inout` / `out` lists (`core/policy.py`, `adapter/scope.py`)
+- [ ] Flag violations in the leak tab — built; GUI checks 20–24 pending
+- [x] Rule fix: only the first input's keys can be Deleted (side inputs are read, not passed on)
 
 ## First public release
 
@@ -105,3 +108,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Phase 4 done: GUI checks 12–15 pass.
 - 2026-09-26: Phase 5 built: walk enters editable subnets; groups tracked. hython tests pass.
 - 2026-09-26: Phase 5 done: GUI checks 16–19 pass.
+- 2026-09-26: Phase 6 built: declarations, violation checks, box scopes. Deleted rule now first-input only.

@@ -9,10 +9,15 @@ States = dict[str, dict[AttribKey, State]]  # node_id -> key -> state (ABSENT ke
 
 
 def state_of(key: AttribKey, snap: Snapshot, inputs: list[Snapshot]) -> State:
-    """State of `key` on `snap`, given the snapshots of its inputs (plan §4.1)."""
+    """State of `key` on `snap`, given the snapshots of its inputs (plan §4.1).
+
+    The output of most SOPs is built from the first input; other inputs are read (a wrangle's
+    second input, Copy to Points' points). So only a key from the first input can be deleted;
+    a key only on another input that does not reach the output is ABSENT here.
+    """
     have = [i for i in inputs if key in i.attribs]
     if key not in snap.attribs:
-        return State.DELETED if have else State.ABSENT
+        return State.DELETED if inputs and key in inputs[0].attribs else State.ABSENT
     if not have:
         return State.BORN
     data_id = snap.attribs[key].data_id
@@ -31,9 +36,9 @@ def compute_states(graph: Graph, snapshots: dict[str, Snapshot]) -> States:
         if node not in snapshots or any(i not in snapshots for i in ids):
             continue
         snap, inputs = snapshots[node], [snapshots[i] for i in ids]
-        # Every key is on the node or an input, so ABSENT never appears here.
         keys = set(snap.attribs).union(*(i.attribs for i in inputs))
-        states[node] = {k: state_of(k, snap, inputs) for k in keys}
+        found = {k: state_of(k, snap, inputs) for k in keys}
+        states[node] = {k: s for k, s in found.items() if s is not State.ABSENT}
     return states
 
 

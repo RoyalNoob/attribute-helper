@@ -20,6 +20,7 @@ class LeakReport:
 
 
 def leak_report(entries: list[Snapshot], exit: Snapshot) -> LeakReport:
+    """`entries[0]` is the main (first) input: only its keys can be reported as deleted."""
     keys = set(exit.attribs).union(*(e.attribs for e in entries))
     states = {k: state_of(k, exit, entries) for k in keys}
 

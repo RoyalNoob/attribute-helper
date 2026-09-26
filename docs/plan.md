@@ -57,8 +57,9 @@ For each node N and each attribute key K, compare the snapshot of N with the sna
 | Born | K is not on any input of N. K is on N. |
 | Written | K is on at least one input. K is on N. The data ID on N is different from the data ID on all inputs that have K. |
 | Pass-through | K is on at least one input. K is on N. The data ID on N is the same as the data ID on one input that has K. |
-| Deleted | K is on at least one input. K is not on N. |
-| Absent | K is not on any input. K is not on N. |
+| Rebuilt | K is on an input and on N, the data ID changed, and the topology ID differs from every input that has K: a write cannot be detected (spike S2). |
+| Deleted | K is on the **first** input. K is not on N. (Other inputs are read, not passed on: a wrangle's second input. Changed 2026-09-26.) |
+| Absent | K is not on N, and not on the first input. |
 
 A node with no inputs (a generator) gives "Born" for all its attributes.
 

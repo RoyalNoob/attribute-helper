@@ -133,22 +133,68 @@ def test_fixed_node_recooks_in_cook_mode():
     assert not problems and PT_M in snaps[wr.path()].attribs
 
 
-def test_leak_report_plan_acceptance():
-    # Outside: a and b. Inside: writes a, deletes b, creates tmp. Exactly one of each.
-    from attribute_helper.adapter.snapshot import collect_leaks
-
+def plan_subnet():
+    """Outside: a and b. Inside: writes a, deletes b, creates tmp."""
     g = geo()
     outer = sop(g, "attribwrangle", sop(g, "box"), snippet="f@a = 1; f@b = 2;")
     sub = sop(g, "subnet", outer)
     write = sop(sub, "attribwrangle", sub.indirectInputs()[0], snippet="f@a = 5; f@tmp = 1;")
     delete = sop(sub, "attribdelete", write, ptdel="b")
     delete.setDisplayFlag(True)
-    report, problems = collect_leaks(sub, SnapshotCache(), cook=True)
-    assert not problems, problems
-    assert report.leaked == [AttribKey("point", "tmp")]
-    assert report.written == [AttribKey("point", "a")]
-    assert report.deleted == [AttribKey("point", "b")]
-    assert report.rebuilt == []
+    return g, outer, sub
+
+
+def test_leak_report_plan_acceptance():
+    from attribute_helper.adapter.scope import collect_scope
+
+    _, _, sub = plan_subnet()
+    decl, results, problems = collect_scope(sub, SnapshotCache(), cook=True)
+    assert not problems and decl is None
+    [result] = results
+    assert result.report.leaked == [AttribKey("point", "tmp")]
+    assert result.report.written == [AttribKey("point", "a")]
+    assert result.report.deleted == [AttribKey("point", "b")]
+    assert result.report.rebuilt == [] and result.violations is None
+
+
+def test_subnet_declaration_from_spare_parms():
+    from attribute_helper.adapter.scope import collect_scope
+
+    _, _, sub = plan_subnet()
+    for name in ("scope_inout", "scope_out"):
+        sub.addSpareParmTuple(hou.StringParmTemplate(name, name, 1))
+    sub.parm("scope_inout").set("a")
+    sub.parm("scope_out").set("tmp -> fx_tmp, height")
+    decl, [result], _ = collect_scope(sub, SnapshotCache(), cook=True)
+    assert decl.in_ == ["*"]
+    kinds = sorted((v.kind, v.name) for v in result.violations)
+    assert kinds == [("missing output", "height"), ("undeclared delete", "b")]
+
+
+def test_network_box_scope_two_exits_and_comment_declaration():
+    from attribute_helper.adapter.scope import boundaries, collect_scope
+
+    g = geo()
+    src = sop(g, "attribwrangle", sop(g, "box"), snippet="f@a = 1;")
+    other = sop(g, "attribwrangle", sop(g, "box"), snippet="f@c = 1;")
+    tmp = sop(g, "attribwrangle", src, snippet="f@tmp = 1;")
+    left = sop(g, "null", tmp)
+    right = sop(g, "attribwrangle", tmp, other, snippet="f@a = 2;")
+    box = g.createNetworkBox()
+    for n in (tmp, left, right):
+        box.addNode(n)
+    sop(g, "null", left), sop(g, "null", right)  # both leave the box
+    pairs = {e.name(): sorted(n.name() for n in ins) for e, ins in boundaries(box)}
+    assert pairs == {left.name(): [src.name()], right.name(): sorted([src.name(), other.name()])}
+
+    box.setComment("my scope\ninout: a\nout: tmp")
+    decl, results, problems = collect_scope(box, SnapshotCache(), cook=True)
+    assert not problems and decl.inout == ["a"]
+    assert all(r.violations == [] for r in results)
+    box.setComment("my scope\nout: tmp")
+    _, results, _ = collect_scope(box, SnapshotCache(), cook=True)
+    by_exit = {r.exit: [(v.kind, v.name) for v in r.violations] for r in results}
+    assert by_exit == {left.path(): [], right.path(): [("undeclared write", "a")]}
 
 
 def test_walk_enters_editable_subnet_but_not_locked_hda():

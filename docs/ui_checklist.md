@@ -61,3 +61,21 @@ Wrangle (`f@tmp = 1;`) → Group Create (group name `top`), display flag on the 
     wrangle. (With "Follow display node" on, the table now shows the inside of the subnet.)
 19. **Locked HDAs stay closed:** an Attribute Wrangle outside the subnet is one row source, not
     expanded (its internals never appear in Born).
+
+## Scope declarations (phase 6)
+
+Use the leak-report setup above (Box → wrangle `f@a = 1; f@b = 2;` → Subnet that writes `a`,
+creates `tmp`, deletes `b`).
+
+20. **No declaration:** the Leak report tab says "No declaration…", and the Declaration column is empty.
+21. **Subnet parameters:** on the Subnet, add spare string parameters `scope_inout` = `a` and
+    `scope_out` = `tmp height` (Edit Parameter Interface). The tab shows the declaration line;
+    `tmp` and `a` say "ok"; `b` is red "undeclared delete"; a "Declared outputs with problems"
+    section lists `height` as "missing output". Status: 2 violation(s).
+22. **Network box:** put the wrangle and Attribute Delete of the depth setup (or any two nodes in a
+    chain) in a network box. Select the box, click "Use selected subnet / HDA / box". Set the box
+    comment to `inout: a` on one line and `out: tmp` on the next. Violations update without clicking.
+23. **Two exits:** wire a second node from inside the box to outside. The tree shows one "Exit:"
+    group per exit.
+24. **Side input:** a wrangle with a second input no longer shows that input's attributes as
+    deleted (Lifetime tab and Leak report).

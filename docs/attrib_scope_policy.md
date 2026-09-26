@@ -101,7 +101,41 @@ Limit: When a node creates new elements, "the outer value" has no single correct
 - One Detail wrangle does the checks: element counts, `out` collisions, and undeclared writes (data IDs).
 - Python is only necessary for the wrap tool and the UI. The cook does not need Python. HDAs stay portable.
 
-## 7. Open questions
+## 7. Decisions for the viewer (2026-09-26)
+
+These fix what the attribute-helper viewer reads. They do not decide enforcement.
+
+1. **A scope is a subnet, an HDA, or a network box.**
+   - Subnet / HDA: entry = its inputs, exit = its output.
+   - Network box: entries = outside nodes wired into the box; exits = nodes in the box whose output
+     leaves the box (or, if none, the box's last nodes). One report per exit, compared only with the
+     entries upstream of that exit. Membership includes nested boxes.
+   - A box can be checked but not enforced: End (§3.2) cannot rebuild a box's output without
+     inserting nodes. Enforcing a box scope means converting it to a subnet or Begin/End pair.
+   - A Begin/End block is not a viewer scope yet; add it when that tool defines its node types.
+2. **Where the lists live.**
+   - Subnet / HDA: spare string parameters `scope_in`, `scope_inout`, `scope_out`.
+   - Network box (no parameters): the box comment, one list per line:
+     `in: *`, `inout: P Cd`, `out: mask -> fx_mask`. Other comment lines are ignored.
+3. **List syntax.** Entries separated by spaces or commas. Houdini-style patterns: `*`, `?`, and
+   `^name` to exclude; later entries win. `group:name` refers to a group (any group class).
+   `a -> b` in `out` is a rename: it is parsed and shown, and `a` counts as declared, but
+   collisions are not checked for renamed outputs until End defines what a rename does.
+4. **What the viewer flags** (compared with the leak report of each exit):
+
+   | Finding | Flag when |
+   |---|---|
+   | Leaked local | not matched by `out` |
+   | Outer write (hint) | not matched by `inout` |
+   | Deleted outer attribute | not matched by `inout` |
+   | Missing output | a literal (non-pattern) `out` name is not alive at the exit |
+   | Collision | a literal, non-renamed `out` name exists at the entry and is not in `inout` |
+   | Unknown (topology changed) | never flagged; shown as unknown |
+
+   `in` is shown but not checked: reads are not visible in cooked geometry (this answers §8 Q2 for
+   the viewer: documentation only).
+
+## 8. Open questions
 
 1. Which mode is most frequent in real work: attribute function or geometry function?
 2. Must `in` be enforced (strip undeclared inputs), or is `in` documentation only?
