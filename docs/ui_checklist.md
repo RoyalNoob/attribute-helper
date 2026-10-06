@@ -40,13 +40,13 @@ Setup: Box → Attribute Wrangle (`f@a = 1; f@b = 2;`) → Subnet (display flag 
 the subnet: input 1 → Attribute Wrangle (`f@a = 5; f@tmp = 1;`) → Attribute Delete (point `b`),
 with the display flag on the Attribute Delete.
 
-12. **Report:** select the Subnet, open the Leak report tab, click "Use selected subnet / HDA".
+12. **Report:** select the Subnet, open the Leak report tab, click "Use selected subnet / HDA / box".
     Sections show: Leaked locals 1 (`tmp`), Outer writes 1 (`a`), Deleted outer 1 (`b`), Unknown 0.
 13. **Live:** inside the subnet, add `f@tmp2 = 1;` to the wrangle. Leaked locals becomes 2 without
     clicking anything.
 14. **Topology:** add a Blast inside (delete point 0) before the output. `a` moves from Outer writes
     to Unknown.
-15. **Deleted scope:** delete the Subnet. The tab says the node was deleted.
+15. **Deleted scope:** delete the Subnet. The tab says the scope was deleted.
 
 ## Depth: subnets and groups
 

@@ -9,8 +9,8 @@ Read docs/houdini-api-notes.md before you use a hou API; it overrides the plan w
 - Track progress in TODO.md: tick items and add a Log line in the same commit as the work.
 - Do not change geometry, node colors, or parameters from the tool. Only exception: the hidden
   `attribute_helper_intended` parameter, written when the user ticks a finding (one undo step).
-- Do the spikes (plan, section 7) before phase 1. Write each result to docs/spikes/.
-- If you are not sure of a hou or Qt API, write a spike. Do not guess.
+- If you are not sure of a hou or Qt API, write a spike (a small hython script) and record the
+  result in docs/spikes/ or docs/houdini-api-notes.md. Do not guess.
 - Houdini 22 ships PySide6 only: import PySide6 directly, no qt_compat layer.
 
 ## Commands

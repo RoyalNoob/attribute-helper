@@ -53,7 +53,7 @@ introspection and one small test network. They are not a full run of the spikes.
 
 ## Not yet verified
 
-- S2 across the full node list (Merge, Copy to Points, Pack, Clean, For-Each, Compile).
-- Whether overlay shapes follow nodes when moved (S3), and event callbacks (S6).
-- Group data IDs (S7).
-- Whether `AttribDataId` equality holds across sessions or after a reload of the hip file.
+- Whether `AttribDataId` equality holds across sessions or after a reload of the hip file. Not
+  needed so far: every comparison happens within one session.
+
+S2, S3, S6, and S7 were verified later; see [spikes/](spikes/). The tests also pass on 22.0.459.

@@ -4,6 +4,8 @@ Name: `attribute-helper`
 Target: Houdini 22 (primary). Houdini 21 support is a stretch goal.
 Type: Open source Python Panel for the Houdini network editor.
 Related document: `attrib_scope_policy.md` (the future scope policy).
+Status: built and released as 0.1.0. Sections 4–6 and 8 describe what was built (updated
+2026-10-07); where a spike changed the original plan, the section says so.
 
 ---
 
@@ -24,7 +26,7 @@ This tool shows the lifetime of each attribute in the network editor. The user t
 
 1. Show the lifetime of attributes (born, written, pass-through, deleted) for each node of a chain.
 2. Show the lifetime in the network editor with overlay shapes. The overlay does not change the scene.
-3. Give a leak report for a subnet or an HDA.
+3. Give a leak report for a subnet, an HDA, or a network box.
 4. Keep the core logic independent of Houdini, so that unit tests run without a Houdini license.
 5. Collect data that helps to design the scope policy (see `attrib_scope_policy.md`).
 
@@ -41,11 +43,11 @@ This tool shows the lifetime of each attribute in the network editor. The user t
 | Term | Meaning |
 |---|---|
 | Target node | The node where the upstream walk starts. Default: the display node of the current network. |
-| Chain | All nodes upstream of the target node, in the current network level. |
+| Chain | All nodes upstream of the target node, in its network level and inside editable subnets it passes. |
 | Snapshot | The list of attributes on the cooked geometry of one node: class, name, type, size, data ID. |
 | Attribute key | The pair (class, name). Point `mask` and primitive `mask` are two different keys. |
-| State | The status of one attribute key on one node: born, written, pass-through, deleted, absent. |
-| Leak | An attribute that is born inside a subnet or an HDA and is alive at its output. |
+| State | The status of one attribute key on one node: born, written, pass-through, rebuilt, deleted, absent. |
+| Leak | An attribute that is born inside a scope (subnet, HDA, or network box) and is alive at its output. |
 
 ## 4. Core concepts
 
@@ -70,7 +72,7 @@ Some nodes change a data ID with no change of values. Example: a Merge node can 
 
 ### 4.3 Lifetime
 
-The lifetime of K is the set of nodes where the state of K is Born, Written, or Pass-through. The overlay draws this set.
+The lifetime of K is the set of nodes where the state of K is Born, Written, Pass-through, or Rebuilt. The overlay draws this set.
 
 ## 5. Architecture
 
@@ -92,119 +94,124 @@ The project has four layers. Only layers 2 to 4 import `hou`.
 
 ### 5.1 Layer 1: core (no `hou`)
 
-Data model (Python dataclasses, frozen where possible):
+Data model (`core/model.py`, frozen dataclasses):
 
 ```python
-AttribKey(cls: str, name: str)               # cls: point | prim | vertex | detail
-AttribInfo(type: str, size: int, data_id: int | None)
-Snapshot(node_id: str, attribs: dict[AttribKey, AttribInfo])
-Graph(nodes: list[str], inputs: dict[str, list[str]])   # node_id -> input node_ids
-State(Enum): BORN, WRITTEN, PASS, DELETED, ABSENT
+AttribKey(cls: str, name: str)   # cls: point | prim | vertex | detail | group:point|prim|vertex|edge
+AttribInfo(type: str, size: int, data_id: tuple[int, ...] | None)  # vexAttribDataId(), spike S1
+Snapshot(node_id: str, attribs: dict[AttribKey, AttribInfo], topology_id: tuple[int, ...] | None)
+Graph(nodes: list[str], inputs: dict[str, list[str]], containers: frozenset[str])
+State(Enum): BORN, WRITTEN, PASS, REBUILT, DELETED, ABSENT
 ```
+
+`Graph.containers` are subnets whose inside is also in the graph. Their own state is their overall
+effect, so `summary` skips them to avoid counting twice.
 
 Functions:
 
 ```python
+# core/states.py
+state_of(key, snapshot, input_snapshots) -> State          # the rules of section 4.1
 compute_states(graph, snapshots) -> dict[node_id, dict[AttribKey, State]]
 lifetime(states, key) -> set[node_id]
-summary(states) -> list[AttribSummary]      # one row per key for the UI list
-leak_report(graph, snapshots, inner_nodes, entry, exit) -> LeakReport
+wires(graph, states, key) -> list[tuple[input_id, node_id]]  # wires that carry the key
+summary(graph, states, snapshots) -> list[AttribSummary]   # one row per key for the table
+# core/report.py
+leak_report(entries, exit) -> LeakReport                    # entries[0] is the main input
+# core/policy.py
+findings(report) -> list[Finding]; parse(text); dump(by_scope); toggle(text, scope, finding, on)
 ```
 
-`LeakReport` has three lists:
+`LeakReport` has four lists: leaked locals (born inside, alive at the exit), outer writes,
+deleted outer attributes (from the main input only), and rebuilt ("unknown": the topology changed
+inside, so a write cannot be detected). It is `state_of` applied across the scope as one node.
 
-1. Leaked locals: born inside, alive at the exit.
-2. Outer writes: alive at the entry, written inside.
-3. Deleted outer attributes: alive at the entry, deleted inside.
+`policy.py` stores which findings the user marked intended (section 8, phase 6).
 
 ### 5.2 Layer 2: adapter
 
-Responsibilities:
-
-1. **Graph walk:** Start at the target node. Walk the inputs. Collect the chain for the current network level. Record the input order of each node.
-2. **Snapshot:** Read `node.geometry()` and convert each attribute to `AttribInfo`.
-3. **Cache:** Key = (`node.sessionId()`, `node.cookCount()`). A cache hit skips the geometry read.
-4. **Cook policy:** Two modes:
-   - "Cooked only" (default for heavy scenes): skip nodes that need a cook. Mark them as "not available" in the UI.
-   - "Cook on demand": read the geometry, which can start a cook.
-5. **Errors:** A node that fails to cook gives an empty snapshot and an error flag. The walk continues.
+1. **Graph walk** (`adapter/graph.py`): start at the target node and walk the inputs, inputs before
+   outputs. Network dots resolve. The walk enters editable SOP networks (plain subnets and unlocked
+   HDAs) from their first output; locked HDAs stay one node. An input from another level is kept as
+   a boundary node and not walked further.
+2. **Snapshot and cache** (`adapter/snapshot.py`): read `node.geometry()` into a `Snapshot`
+   (attributes and groups). Cache by `sessionId()`, valid while `cookCount()` is unchanged.
+3. **Cook policy:** "cooked only" (default) never starts a cook: it checks `errors()`, then
+   `needsToCook()`, before `geometry()`. "Cook on demand" may cook.
+4. **Errors:** a node that fails to cook gets no snapshot and a reason. It and its direct outputs
+   have no state (an empty snapshot would fake Born and Deleted). The walk continues.
+5. **Scopes** (`adapter/scope.py`): entries and exits of a subnet, HDA, or network box, the leak
+   report per exit, and reading and writing the intended-findings parameter.
 
 ### 5.3 Layer 3: overlay
 
-Converts states to network editor shapes for the toggled keys.
+`overlay.py` converts states to network editor shapes for the toggled keys.
 
-- Each toggled key gets one color from a fixed palette.
-- Node outline: shows the state of that node (Born, Written, Deleted). Pass-through nodes get a thin outline.
-- Wire line: a line along each wire between two nodes in the lifetime.
-- Several toggled keys on one node: offset the outlines, so that all are visible.
+- Each toggled key gets one color from a fixed palette of eight.
+- Node outline by state: Born filled, Written solid, Rebuilt lighter, Pass-through faint, Deleted
+  with a cross. Several keys on one node get nested outlines; their wires sit side by side.
+- Method (spike S3): the network editor rebuilds its overlay on every UI event, so shapes set once
+  are wiped. The overlay wraps `nodegraphhooks.createEventHandler` to add one pending action that
+  never completes; nodegraph merges its shapes into every redraw. Closing the panel restores the hook.
 
 ### 5.4 Layer 4: ui (Python Panel)
 
-- **Header:** target node field, "Use display node" button, "Pick" button, cook-mode toggle, "Refresh" button.
-- **Table:** one row per attribute key. Columns: visibility toggle, color swatch, name, class, type, born node, deleted node, write count.
-- **Filters:** name search (glob), class filter, "hide standard attributes" toggle (`P`, `N`, `Cd`, and so on; the list is configurable).
-- **Row click:** selects the born node in the network editor.
-- **Leak report tab:** select a subnet or an HDA, then show the three lists of section 5.1.
-- Use a Qt model/view (`QAbstractTableModel` + `QSortFilterProxyModel`). Do not use a plain table widget.
+- **Header (both tabs):** "Cook on demand" toggle, "Refresh" button.
+- **Lifetime tab:** "Follow display node" (default) or "Use selected" to pin a target. Table with
+  columns Show (toggle and color), Name, Class, Type, Born, Deleted, Written, Rebuilt.
+  Filters: name (text or glob), class, "Hide standard" (a fixed list in `ui/table_model.py`).
+  Row click selects the born node, entering its subnet if needed.
+- **Leak report tab:** pick a subnet, HDA, or network box. One group per exit for boxes. Each
+  finding has a tickbox for "intended"; unticked findings are red.
+- Qt model/view for the table (`QAbstractTableModel` + `QSortFilterProxyModel`). PySide6 only.
 
 ### 5.5 Redraw and events
 
-The overlay must update when:
-
-1. the user toggles a key,
-2. the user changes the target node,
-3. a node in the chain cooks again,
-4. the user moves nodes or changes the network,
-5. the user changes the network level (enters or leaves a subnet).
-
-Method: node event callbacks on the chain nodes, plus a light panel timer as a fallback. The spike in section 7 decides the final method.
+Method (spike S6): **poll, do not subscribe.** There is no "cooked" node event; `InputDataChanged`
+fires before the recook. A 250 ms `QTimer`, active while the panel is visible, reads the target and
+the cache keys of the chain, and re-reads only nodes whose cook count changed. A check with no
+changes costs about 2 ms per 1000 nodes. Node drags are handled by the overlay's pending action.
 
 ## 6. Repository layout
 
 ```
 attribute-helper/
-  README.md
-  LICENSE
-  CONTRIBUTING.md
-  CHANGELOG.md
-  CLAUDE.md                       # instructions for Claude Code (see appendix A)
+  README.md, README.ja.md, README.zh-TW.md
+  LICENSE, CONTRIBUTING.md, CHANGELOG.md, TODO.md
+  CLAUDE.md                       # instructions for Claude Code
+  install.py                      # one-line install from Houdini's Python Shell
+  PaneTabTypeMenu.xml             # adds the panel to New Pane Tab Type > Inspectors
   docs/
     plan.md                       # this document
     attrib_scope_policy.md
+    houdini-api-notes.md          # verified hou behavior; overrides this plan
+    ui_checklist.md               # manual GUI checks
     spikes/                       # results of the spikes in section 7
+    images/                       # README screenshots
   package/
-    attribute_helper.json          # Houdini package file
+    attribute_helper.json         # Houdini package file
   python/
     attribute_helper/
-      __init__.py
-      core/
-        model.py
-        states.py
-        report.py
-      adapter/
-        graph.py
-        snapshot.py
-        cache.py
-      overlay/
-        shapes.py
-        palette.py
-      ui/
-        qt_compat.py              # one import point for PySide
-        panel.py
-        table_model.py
+      core/        model.py, states.py, report.py, policy.py   # no hou
+      adapter/     graph.py, snapshot.py, scope.py
+      overlay.py
+      ui/          panel.py, table_model.py, leak_tab.py
   python_panels/
     attribute_helper.pypanel
   tests/
-    core/                         # pytest, no Houdini
-      fixtures/                   # JSON graphs and snapshots
-    houdini/                      # hython tests, run locally
+    core/                         # pytest, no Houdini; fixtures built in code
+    houdini/                      # hython tests, networks built in code
   tools/
     run_hython_tests.py
 ```
 
 ### 6.1 Installation (Houdini package)
 
-The user copies `package/attribute_helper.json` into `$HOUDINI_USER_PREF_DIR/packages/` and sets the path of the repository in the file. The package adds the repository to `HOUDINI_PATH` and the `python/` folder to `PYTHONPATH`. Spike S5 confirms the package syntax.
+`install.py`, run from Houdini's Python Shell, writes `<prefs>/packages/attribute_helper.json`
+containing `{"package_path": "<repo>/package"}`. The prefs folder comes from
+`hou.homeHoudiniDirectory()`, so it is the one the running Houdini reads (spike S5 found two
+candidates on Windows). The repo's package file sets `HOUDINI_PATH` and `PYTHONPATH` relative to
+itself, so nothing in the repo holds a local path.
 
 ## 7. Spikes (do these first)
 
@@ -263,13 +270,16 @@ Done when: a test subnet with one leaked local, one outer write, and one deleted
 
 ### Phase 5: Depth
 
-- Enter subnets and HDAs (a tree of network levels).
+- Enter editable subnets and unlocked HDAs. Locked HDAs, including SideFX nodes built as HDAs, stay
+  one node (checked from outside with the leak report).
 - Groups (if S7 passes) and detail attributes in the table.
 
-### Phase 6: Policy link (later)
+### Phase 6: Policy link
 
-- Read the declared `in`, `inout`, and `out` lists of a scope (see `attrib_scope_policy.md`).
-- Flag violations in the table.
+- Planned: read declared `in`, `inout`, and `out` lists of a scope and flag violations.
+- Built instead (2026-09-26, after trying the lists): the user ticks each leak-report finding that is
+  intended (leaked, changed, or deleted); unticked findings are the problems. Ticks are stored in one
+  hidden string parameter, `attribute_helper_intended`. See `attrib_scope_policy.md` §7.
 
 ## 9. Testing strategy
 
@@ -292,45 +302,20 @@ Rules:
 | False "Written" from data IDs | Wrong hints | Result of S2 in the docs. Label "Written" as a hint. |
 | Overlay API limits | No overlay, or no update on node move | S3 first. Fallback: highlight in the table and select nodes. |
 | Redraw cost | Slow network editor | Redraw only for toggled keys. Throttle the updates. |
-| Qt binding changes between versions | Panel does not load | One import point (`qt_compat.py`). |
+| Qt binding changes between versions | Panel does not load | Houdini 22 ships PySide6 only (spike S4). Add a compat import only if a second binding appears. |
 
 ## 11. Open-source items
 
 Decisions for the maintainer:
 
-1. **License:** MIT or Apache-2.0. (Apache-2.0 adds a patent grant.)
+1. **License:** MIT (decided).
 2. **Supported versions:** Houdini 22 only, or 21 and 22.
 3. **Name:** `attribute-helper` (decided).
 
-Files for the first public release: README with a GIF of the overlay, install steps, a list of known limits (section 4.2, non-goals), CONTRIBUTING with the test commands, and CHANGELOG.
+First public release (0.1.0, 2026-10-06): README in three languages with screenshots, install script, known limits, CONTRIBUTING, and CHANGELOG.
 
 ## 12. Future work
 
 - Heuristic detection of reads (VEX scan) to show where the inner network uses an attribute.
 - Export of the lifetime as a report (Markdown or JSON) for code review of HDAs.
 - The scope tool itself (`attrib_scope_policy.md`), with this viewer as its debug view.
-
----
-
-## Appendix A: Starter content for CLAUDE.md
-
-```markdown
-# attribute-helper
-
-Python Panel for Houdini 22 that shows attribute lifetimes in the network editor.
-Read docs/plan.md before you change the architecture.
-
-## Rules
-- python/attribute_helper/core/ must not import hou. Keep it pure Python.
-- Do not change geometry, node colors, or parameters from the tool.
-- Do the spikes (docs/plan.md, section 7) before phase 1. Write each result to docs/spikes/.
-- If you are not sure of a hou or Qt API, write a spike. Do not guess.
-
-## Commands
-- Core tests: pytest tests/core
-- Houdini tests: hython tools/run_hython_tests.py
-
-## Style
-- Python 3, type hints, dataclasses for the data model.
-- Short functions. One responsibility for each module.
-```

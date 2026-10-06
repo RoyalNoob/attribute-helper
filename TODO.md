@@ -13,7 +13,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** Phase 6 (policy link) — GUI check
+**Current milestone:** 0.1.0 released. Next: the open decision below, or Future work in [plan §12](docs/plan.md).
 
 ## Decisions
 
@@ -53,7 +53,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - [x] Cache keyed on (`sessionId()`, `cookCount()`)
 - [x] Cook policy: "cooked only" never cooks (tested with cook counts); "cook on demand"
 - [x] Cook errors → no snapshot + reason (not an empty snapshot, which would fake Born/Deleted); walk continues
-- [x] hython tests building networks in code: `hython tools/run_hython_tests.py` (9 tests)
+- [x] hython tests building networks in code: `hython tools/run_hython_tests.py`
 
 ## Phase 3: MVP panel
 
@@ -80,7 +80,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 - [x] Decisions in [scope policy §7](docs/attrib_scope_policy.md): scope = subnet / HDA / network box
 - [x] ~~in/inout/out lists~~ replaced (too clunky) by ticking findings "intended", saved in a hidden parm
-- [ ] Leak tab tickboxes, unticked = red — built; GUI checks 20–26 pending
+- [x] Leak tab tickboxes, unticked = red; GUI checks 20–26 pass
 - [x] Rule fix: only the first input's keys can be Deleted (side inputs are read, not passed on)
 
 ## First public release
@@ -118,3 +118,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-10-06: hython tests pass on Houdini 22.0.459; docs no longer pin the build path.
 - 2026-10-06: CONTRIBUTING.md.
 - 2026-10-07: Screenshots and GIF in the READMEs.
+- 2026-10-07: Docs audit: plan updated to match 0.1.0; stale checklist, API notes, and CLAUDE.md lines fixed; .coverage untracked.
