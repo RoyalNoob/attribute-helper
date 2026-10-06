@@ -86,7 +86,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 ## First public release
 
 - [x] README: user manual, install steps, known limits
-- [ ] README: overlay GIF / screenshots
+- [x] README: screenshots + navigation GIF (docs/images/), in all three languages
 - [x] CONTRIBUTING.md with test commands
 - [x] CHANGELOG.md (0.1.0)
 
@@ -117,3 +117,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-10-06: Released 0.1.0 (tag v0.1.0).
 - 2026-10-06: hython tests pass on Houdini 22.0.459; docs no longer pin the build path.
 - 2026-10-06: CONTRIBUTING.md.
+- 2026-10-07: Screenshots and GIF in the READMEs.

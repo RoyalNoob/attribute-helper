@@ -12,6 +12,8 @@ are easy to spot.
 
 Status: pre-alpha. All six phases of [docs/plan.md](docs/plan.md) are done. Houdini 22 only.
 
+![The Lifetime tab with mask ticked: born at the wrangle, deleted at the Attribute Delete, carried through the Merge](docs/images/hero.png)
+
 ## Install
 
 1. Get this repository onto your machine (clone or download), anywhere you like.
@@ -105,6 +107,8 @@ Filters:
 Click a column header to sort. Click a row's name to select the node where the attribute is born;
 if it was born inside a subnet, the editor goes there.
 
+![Clicking an attribute jumps to the node where it is born, even inside a subnet](docs/images/nav.gif)
+
 ### Overlay
 
 Each ticked attribute gets its own color (eight colors, then they repeat). For that attribute:
@@ -121,6 +125,8 @@ Each ticked attribute gets its own color (eight colors, then they repeat). For t
 With several attributes ticked, outlines nest and wires sit side by side. The overlay follows
 nodes as you drag them, and only shows in the network that holds the target. It never changes
 node colors or anything else in the scene. Closing the panel removes it.
+
+![Two attributes ticked: P and mask, each in its own color](docs/images/two-attributes.png)
 
 ### Subnets and HDAs
 
@@ -167,6 +173,8 @@ Select a scope in the network editor and click **Use selected subnet / HDA / box
 If both a box and a node are selected, the box is used. The report updates live while the tab is
 visible.
 
+![A network box as a scope, with one report per exit](docs/images/network-box.png)
+
 ### Findings
 
 | Section | Meaning |
@@ -181,6 +189,8 @@ visible.
 Not every finding is a mistake: a subnet is often meant to produce an attribute. Tick each finding
 that is **intended**. Unticked findings stay red, and the status line counts them. What is left
 red is what to fix.
+
+![Leak report of a subnet: tmp ticked as intended, mask and mask_1 still red](docs/images/leak-report.png)
 
 - A tick means one of three intents: **leaked**, **changed**, or **deleted**. An outer write and
   an unknown both count as "changed", so adding a Merge later (which turns writes into unknowns)
