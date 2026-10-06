@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — 2026-10-07
+
+Documentation only; the tool itself is unchanged from 0.1.0.
+
+- README (English, Japanese, Traditional Chinese): screenshots and a GIF of jumping to an
+  attribute's origin.
+- Added CONTRIBUTING.md.
+- docs/plan.md and the other developer docs now describe what was built in 0.1.0.
+- Supported version decided: Houdini 22 only.
+
 ## 0.1.0 — 2026-10-06
 
 First release. Houdini 22, SOPs only.

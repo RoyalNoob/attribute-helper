@@ -120,3 +120,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-10-07: Screenshots and GIF in the READMEs.
 - 2026-10-07: Docs audit: plan updated to match 0.1.0; stale checklist, API notes, and CLAUDE.md lines fixed; .coverage untracked.
 - 2026-10-07: Decision: Houdini 22 only.
+- 2026-10-07: Released 0.1.1 (docs only; tag v0.1.1).
