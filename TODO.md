@@ -87,7 +87,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 
 - [x] README: user manual, install steps, known limits
 - [ ] README: overlay GIF / screenshots
-- [ ] CONTRIBUTING.md with test commands
+- [x] CONTRIBUTING.md with test commands
 - [x] CHANGELOG.md (0.1.0)
 
 ## Log
@@ -116,3 +116,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-10-06: README translations: README.ja.md, README.zh-TW.md.
 - 2026-10-06: Released 0.1.0 (tag v0.1.0).
 - 2026-10-06: hython tests pass on Houdini 22.0.459; docs no longer pin the build path.
+- 2026-10-06: CONTRIBUTING.md.

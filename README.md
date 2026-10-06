@@ -243,5 +243,6 @@ in Edit Parameter Interface if you want to.
   ```
 
 - GUI checks: [docs/ui_checklist.md](docs/ui_checklist.md).
+- How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 MIT license. See [LICENSE](LICENSE).
