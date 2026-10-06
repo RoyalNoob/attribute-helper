@@ -1,5 +1,7 @@
 # attribute-helper
 
+**English** | [日本語](README.ja.md) | [繁體中文](README.zh-TW.md)
+
 A Python Panel for Houdini 22 that shows where each SOP attribute is born, written, passed
 through, and deleted, drawn as an overlay on the network editor. It also reports what a subnet,
 HDA, or network box leaks to the rest of the network, and lets you mark each finding as intended.

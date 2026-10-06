@@ -113,3 +113,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-09-26: Ticks record intent (leaked / changed / deleted); written and unknown share "changed", so a Merge no longer makes ticks stale.
 - 2026-09-26: User manual in README.md.
 - 2026-09-26: install.py: one line in Houdini's Python Shell installs the package pointer.
+- 2026-10-06: README translations: README.ja.md, README.zh-TW.md.
