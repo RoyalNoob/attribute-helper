@@ -235,10 +235,11 @@ in Edit Parameter Interface if you want to.
   python -m pytest --cov=attribute_helper.core --cov-fail-under=90
   ```
 
-- Adapter and UI tests run in hython (they build their networks in code):
+- Adapter and UI tests run in hython (they build their networks in code). `<Houdini install>`
+  is for example `C:/Program Files/Side Effects Software/Houdini 22.0.459`:
 
   ```bash
-  "C:/Program Files/Side Effects Software/Houdini 22.0.429/bin/hython.exe" tools/run_hython_tests.py
+  "<Houdini install>/bin/hython" tools/run_hython_tests.py
   ```
 
 - GUI checks: [docs/ui_checklist.md](docs/ui_checklist.md).

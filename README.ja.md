@@ -243,9 +243,10 @@ Windows では、スタートメニューから起動した Houdini は `Documen
   ```
 
 - アダプタと UI のテストは hython で実行します（テスト用のネットワークはコードで作ります）。
+  `<Houdini install>` は、たとえば `C:/Program Files/Side Effects Software/Houdini 22.0.459` です。
 
   ```bash
-  "C:/Program Files/Side Effects Software/Houdini 22.0.429/bin/hython.exe" tools/run_hython_tests.py
+  "<Houdini install>/bin/hython" tools/run_hython_tests.py
   ```
 
 - GUI のチェック項目：[docs/ui_checklist.md](docs/ui_checklist.md)。

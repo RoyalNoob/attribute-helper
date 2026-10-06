@@ -220,10 +220,11 @@ Edit Parameter Interface 中移除。
   python -m pytest --cov=attribute_helper.core --cov-fail-under=90
   ```
 
-- Adapter 與 UI 測試在 hython 中執行（測試用網路以程式碼建立）：
+- Adapter 與 UI 測試在 hython 中執行（測試用網路以程式碼建立）。`<Houdini install>`
+  例如 `C:/Program Files/Side Effects Software/Houdini 22.0.459`：
 
   ```bash
-  "C:/Program Files/Side Effects Software/Houdini 22.0.429/bin/hython.exe" tools/run_hython_tests.py
+  "<Houdini install>/bin/hython" tools/run_hython_tests.py
   ```
 
 - GUI 檢查清單：[docs/ui_checklist.md](docs/ui_checklist.md)。

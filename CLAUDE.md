@@ -15,7 +15,8 @@ Read docs/houdini-api-notes.md before you use a hou API; it overrides the plan w
 
 ## Commands
 - Core tests (run before every commit; no CI): pytest --cov=attribute_helper.core --cov-fail-under=90
-- Houdini tests: "C:/Program Files/Side Effects Software/Houdini 22.0.429/bin/hython.exe" tools/run_hython_tests.py
+- Houdini tests: "C:/Program Files/Side Effects Software/Houdini <version>/bin/hython.exe" tools/run_hython_tests.py
+  (use the installed build; 22.0.459 as of 2026-10-06). The command must fail loudly: do not pipe it into tail.
 
 ## Style
 - Python 3, type hints, dataclasses for the data model.
