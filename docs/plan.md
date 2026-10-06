@@ -1,7 +1,7 @@
 # Attribute Lifetime Viewer: Project Plan
 
 Name: `attribute-helper`
-Target: Houdini 22 (primary). Houdini 21 support is a stretch goal.
+Target: Houdini 22 only (decided 2026-10-07).
 Type: Open source Python Panel for the Houdini network editor.
 Related document: `attrib_scope_policy.md` (the future scope policy).
 Status: built and released as 0.1.0. Sections 4–6 and 8 describe what was built (updated
@@ -309,7 +309,7 @@ Rules:
 Decisions for the maintainer:
 
 1. **License:** MIT (decided).
-2. **Supported versions:** Houdini 22 only, or 21 and 22.
+2. **Supported versions:** Houdini 22 only (decided).
 3. **Name:** `attribute-helper` (decided).
 
 First public release (0.1.0, 2026-10-06): README in three languages with screenshots, install script, known limits, CONTRIBUTING, and CHANGELOG.

@@ -13,13 +13,13 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** 0.1.0 released. Next: the open decision below, or Future work in [plan §12](docs/plan.md).
+**Current milestone:** 0.1.0 released. Next: Future work in [plan §12](docs/plan.md).
 
 ## Decisions
 
 - [x] License: MIT
 - [x] No CI: run `pytest` locally before committing
-- [ ] Supported versions: Houdini 22 only, or 21 and 22
+- [x] Supported versions: Houdini 22 only
 - [x] Project name: `attribute-helper`
 
 ## Phase 0: Repository setup
@@ -119,3 +119,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-10-06: CONTRIBUTING.md.
 - 2026-10-07: Screenshots and GIF in the READMEs.
 - 2026-10-07: Docs audit: plan updated to match 0.1.0; stale checklist, API notes, and CLAUDE.md lines fixed; .coverage untracked.
+- 2026-10-07: Decision: Houdini 22 only.
