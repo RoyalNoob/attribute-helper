@@ -233,6 +233,13 @@ preferences `packages` folder) and restart Houdini.
 Nodes where you ticked findings keep the hidden `attribute_helper_intended` parameter; remove it
 in Edit Parameter Interface if you want to.
 
+## Issues and pull requests
+
+Bug reports and feature requests are welcome as [issues](https://github.com/RoyalNoob/attribute-helper/issues). **Pull requests are not
+accepted**: I don't have time to review code or manage this as an open-source project. Fork or
+clone it and change anything you like; the MIT license allows it. See
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Development
 
 - Architecture, decisions, and progress: [docs/plan.md](docs/plan.md), [TODO.md](TODO.md),
@@ -254,6 +261,6 @@ in Edit Parameter Interface if you want to.
   ```
 
 - GUI checks: [docs/ui_checklist.md](docs/ui_checklist.md).
-- How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md).
+- Notes for working on your own copy: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 MIT license. See [LICENSE](LICENSE).

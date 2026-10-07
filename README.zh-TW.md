@@ -217,6 +217,12 @@ cook 失敗的節點，或在 **Cook on demand** 關閉時需要 cook 的節點�
 然後重新啟動 Houdini。勾選過結果的節點會保留隱藏參數 `attribute_helper_intended`；如有需要，可在
 Edit Parameter Interface 中移除。
 
+## Issue 與 Pull Request
+
+歡迎透過 [Issue](https://github.com/RoyalNoob/attribute-helper/issues) 回報錯誤或提出功能需求。**不接受 Pull Request**：我沒有時間審查程式碼，
+也無法以開源專案的方式維護這個儲存庫。請直接 fork 或 clone，自由修改（MIT 授權允許這麼做）。詳見
+[CONTRIBUTING.md](CONTRIBUTING.md)（英文）。
+
 ## 開發
 
 - 架構、決策與進度：[docs/plan.md](docs/plan.md)、[TODO.md](TODO.md)、

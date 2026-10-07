@@ -240,6 +240,13 @@ Windows では、スタートメニューから起動した Houdini は `Documen
 削除し、Houdini を再起動します。チェックを入れたノードには非表示の `attribute_helper_intended`
 パラメータが残ります。必要なら Edit Parameter Interface で削除してください。
 
+## Issue とプルリクエスト
+
+バグ報告や機能の要望は [Issue](https://github.com/RoyalNoob/attribute-helper/issues) で受け付けています。**プルリクエストは受け付けて
+いません**：コードをレビューしたり、オープンソースプロジェクトとして運営したりする時間がないためです。
+フォークまたはクローンして自由に変更してください（MIT ライセンスで許可されています）。詳しくは
+[CONTRIBUTING.md](CONTRIBUTING.md)（英語）を参照してください。
+
 ## 開発
 
 - 設計・決定事項・進捗：[docs/plan.md](docs/plan.md)、[TODO.md](TODO.md)、

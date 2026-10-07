@@ -1,6 +1,17 @@
 # Contributing
 
-Thanks for helping. This is a small project: issues and pull requests are both welcome.
+**Pull requests are not accepted.** This is a personal tool shared as is. I don't have time to
+review code or run it as a community open-source project, so pull requests will be closed
+without review.
+
+What you can do instead:
+
+- **Report a bug or request a feature:** open an [issue](https://github.com/RoyalNoob/attribute-helper/issues). Include your Houdini build
+  (Help > About Houdini) and, for bugs, the smallest network that shows the problem.
+- **Change it yourself:** fork or clone the repository and make any changes you like. The MIT
+  license allows this, including in commercial work.
+
+The rest of this file is for anyone working on their own copy.
 
 ## Before you start
 
@@ -8,8 +19,6 @@ Thanks for helping. This is a small project: issues and pull requests are both w
   [docs/houdini-api-notes.md](docs/houdini-api-notes.md) before you use a `hou` API. The notes
   record what was actually verified in Houdini 22 and override the plan where they differ.
 - [TODO.md](TODO.md) shows what is done and what is open.
-- For a larger change (a new state, a new scope type, a change to the leak rules), open an issue
-  first so we can agree on the behavior.
 
 ## Setup
 
@@ -49,7 +58,7 @@ Houdini 22 is needed for the adapter and UI tests and for GUI checks.
 
 ## Tests
 
-Run both before you open a pull request.
+Run both after each change.
 
 Core (no Houdini):
 
@@ -67,16 +76,9 @@ The runner prints `PASS` / `FAIL` per test and exits non-zero on failure. Do not
 something that hides the exit code.
 
 If you changed `ui/` or `overlay.py`, also run the relevant parts of
-[docs/ui_checklist.md](docs/ui_checklist.md) in the Houdini GUI, and say in the pull request which
-checks you ran.
+[docs/ui_checklist.md](docs/ui_checklist.md) in the Houdini GUI.
 
-## Pull requests
+## Keeping your copy tidy
 
-- One topic per pull request.
-- Update [TODO.md](TODO.md) (tick items, add a Log line) and [CHANGELOG.md](CHANGELOG.md) in the
-  same pull request.
-- If behavior that users see changes, update [README.md](README.md). The Japanese and Traditional
-  Chinese READMEs can follow later; mention it in the pull request if you did not update them.
-- Say which Houdini build you tested with (Help > About Houdini).
-
-By contributing, you agree that your contribution is licensed under the [MIT license](LICENSE).
+- Track your changes in [TODO.md](TODO.md) and [CHANGELOG.md](CHANGELOG.md).
+- If behavior that users see changes, update [README.md](README.md).
