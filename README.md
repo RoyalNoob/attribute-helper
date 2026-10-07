@@ -6,9 +6,10 @@ A Python Panel for Houdini 22 that shows where each SOP attribute is born, writt
 through, and deleted, drawn as an overlay on the network editor. It also reports what a subnet,
 HDA, or network box leaks to the rest of the network, and lets you mark each finding as intended.
 
-Houdini has no attribute scope: whatever a node creates travels downstream. This panel makes that
-visible, so temporary attributes that escape a subnet, or outer attributes that get overwritten,
-are easy to spot.
+In Houdini, the attributes a node creates travel downstream with the geometry. It is hard to keep
+track of where each one comes from and where it goes, especially as your network grows. This panel
+makes that visible, so temporary attributes that escape a subnet, or outer attributes that get
+overwritten, are easy to spot.
 
 Status: pre-alpha. All six phases of [docs/plan.md](docs/plan.md) are done. Houdini 22 only.
 
