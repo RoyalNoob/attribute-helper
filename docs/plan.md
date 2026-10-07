@@ -4,7 +4,7 @@ Name: `attribute-helper`
 Target: Houdini 22 only (decided 2026-10-07).
 Type: Open source Python Panel for the Houdini network editor.
 Related document: `attrib_scope_policy.md` (the future scope policy).
-Status: built and released as 0.1.0. Sections 4–6 and 8 describe what was built (updated
+Status: built and released as 0.1. Sections 4–6 and 8 describe what was built (updated
 2026-10-07); where a spike changed the original plan, the section says so.
 
 ---
@@ -312,7 +312,7 @@ Decisions for the maintainer:
 2. **Supported versions:** Houdini 22 only (decided).
 3. **Name:** `attribute-helper` (decided).
 
-First public release (0.1.0, 2026-10-06): README in three languages with screenshots, install script, known limits, CONTRIBUTING, and CHANGELOG.
+First public release (0.1, 2026-10-07): README in three languages with screenshots, install script, known limits, CONTRIBUTING, and CHANGELOG.
 
 ## 12. Future work
 

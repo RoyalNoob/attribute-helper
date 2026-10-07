@@ -13,7 +13,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 4. Handover: tick finished items, add a dated line under **Log**, and record
    anything half-done as an unchecked item with a note.
 
-**Current milestone:** 0.1.0 released. Next: Future work in [plan §12](docs/plan.md).
+**Current milestone:** 0.1 released. Next: Future work in [plan §12](docs/plan.md).
 
 ## Decisions
 
@@ -88,7 +88,7 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - [x] README: user manual, install steps, known limits
 - [x] README: screenshots + navigation GIF (docs/images/), in all three languages
 - [x] CONTRIBUTING.md with test commands
-- [x] CHANGELOG.md (0.1.0)
+- [x] CHANGELOG.md (0.1)
 
 ## Log
 
@@ -123,3 +123,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-10-07: Released 0.1.1 (docs only; tag v0.1.1).
 - 2026-10-07: README intros: softer wording about attribute scope.
 - 2026-10-07: No pull requests accepted: disclaimer in CONTRIBUTING.md and the READMEs; issues welcome.
+- 2026-10-07: Releases 0.1.0 and 0.1.1 folded into one release, 0.1 (tag v0.1); old tags deleted.

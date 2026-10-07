@@ -1,18 +1,8 @@
 # Changelog
 
-## 0.1.1 — 2026-10-07
+## 0.1 — 2026-10-07
 
-Documentation only; the tool itself is unchanged from 0.1.0.
-
-- README (English, Japanese, Traditional Chinese): screenshots and a GIF of jumping to an
-  attribute's origin.
-- Added CONTRIBUTING.md.
-- docs/plan.md and the other developer docs now describe what was built in 0.1.0.
-- Supported version decided: Houdini 22 only.
-
-## 0.1.0 — 2026-10-06
-
-First release. Houdini 22, SOPs only.
+First release. Houdini 22 only, SOPs only.
 
 ### Lifetime tab
 - Table of every attribute and group upstream of a target node (the display node, or a pinned
@@ -30,6 +20,7 @@ First release. Houdini 22, SOPs only.
 - Tick findings as intended; unticked findings stay red. Ticks are stored in a hidden parameter
   (`attribute_helper_intended`), one undo step each.
 
-### Install
+### Install and docs
 - `install.py`: one line in Houdini's Python Shell writes the package pointer to the right prefs folder.
-- READMEs in English, Japanese, and Traditional Chinese.
+- READMEs in English, Japanese, and Traditional Chinese, with screenshots and a GIF.
+- CONTRIBUTING.md: issues are welcome; pull requests are not accepted (fork or clone instead).
