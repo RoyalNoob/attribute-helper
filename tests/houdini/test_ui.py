@@ -64,6 +64,20 @@ def test_gui_modules_import_without_gui():
     import attribute_helper.ui.panel  # noqa: F401
 
 
+def test_overlay_survives_replaced_level():
+    """Regression: the cached view held a hou.Node; once deleted, every poll raised ObjectWasDeleted."""
+    from types import SimpleNamespace
+    import hou
+    from attribute_helper.ui.panel import Panel, View
+
+    geo = hou.node("/obj").createNode("geo")
+    view = View(geo.path(), None, None, {})
+    geo.destroy()
+    me = SimpleNamespace(view=view, model=SimpleNamespace(colors={AttribKey("point", "mask"): "red"}))
+    editor = SimpleNamespace(pwd=lambda: hou.node("/obj"))
+    assert Panel._shapes(me, editor) == []  # other level: nothing to draw, and no raise
+
+
 def test_leak_tab_ticks_and_stale_section():
     from PySide6 import QtWidgets
     from attribute_helper.adapter.scope import ExitResult

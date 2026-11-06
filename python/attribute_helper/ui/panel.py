@@ -19,7 +19,7 @@ CLASSES = ["", "point", "prim", "vertex", "detail", "group:point", "group:prim",
 
 @dataclass
 class View:
-    level: hou.Node
+    level: str  # a path, not a hou.Node: a cached node can be deleted or replaced (HDA, type change)
     graph: Graph
     states: States
     problems: dict[str, str]
@@ -127,13 +127,13 @@ class Panel(QtWidgets.QWidget):
             return
         graph, snaps, problems = collect(target, self.cache, self.cook.isChecked())
         states = compute_states(graph, snaps)
-        view = View(target.parent(), graph, states, problems)
+        view = View(target.parent().path(), graph, states, problems)
         if not force and self.view and (self.view.level, self.view.graph, self.view.states,
                                         self.view.problems) == (view.level, graph, states, problems):
             return
         self.target.setText(f"Target: {target.path()}  ({len(graph.nodes)} nodes)")
         self._show(view, _problem_text(problems))
-        level = target.parent().path() + "/"
+        level = view.level + "/"
         # Inside a subnet shows as "subnet1/wrangle1"; boundary nodes by their own name.
         names = {n: n[len(level):] if n.startswith(level) else n.rsplit("/", 1)[-1] for n in graph.nodes}
         self.model.set_rows(summary(graph, states, snaps), names)
@@ -149,7 +149,7 @@ class Panel(QtWidgets.QWidget):
         overlay.push()
 
     def _shapes(self, editor: hou.NetworkEditor) -> list:
-        if self.view is None or not self.model.colors or editor.pwd() != self.view.level:
+        if self.view is None or not self.model.colors or editor.pwd().path() != self.view.level:
             return []
         return overlay.shapes(editor, self.view.graph, self.view.states, self.model.colors)
 

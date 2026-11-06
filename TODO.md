@@ -124,3 +124,4 @@ Milestones follow [docs/plan.md](docs/plan.md) §7–8.
 - 2026-10-07: README intros: softer wording about attribute scope.
 - 2026-10-07: No pull requests accepted: disclaimer in CONTRIBUTING.md and the READMEs; issues welcome.
 - 2026-10-07: Releases 0.1.0 and 0.1.1 folded into one release, 0.1 (tag v0.1); old tags deleted.
+- 2026-11-07: Fix: panel cached the network level as a hou.Node; after it was deleted or replaced (e.g. subnet → HDA) every poll raised ObjectWasDeleted. The view now caches the path.
